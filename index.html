@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Visages">
+<title>Visages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#2D5A27; --green-light:#E8F0E6; --warm:#F7F4EF; --warm-dark:#E0D9CE;
+  --text:#2C2C2C; --text-light:#888; --red:#C0392B; --red-light:#FADBD8;
+  --correct:#27AE60; --wrong:#E74C3C;
+  --font-d:'Instrument Serif',Georgia,serif;
+  --font-b:'DM Sans',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font-b);background:var(--warm);color:var(--text);min-height:100vh;min-height:-webkit-fill-available}
+#app{max-width:420px;margin:0 auto;padding:0 20px 60px}
+
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;padding:24px 0 18px;border-bottom:1px solid var(--warm-dark);margin-bottom:24px}
+header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--green);letter-spacing:-0.01em;cursor:pointer}
+.header-right{display:flex;align-items:center;gap:10px}
+.lang-btn{padding:5px 10px;border-radius:8px;border:1.5px solid var(--warm-dark);font-size:11px;font-weight:700;font-family:var(--font-b);cursor:pointer;background:#fff;color:var(--text-light);transition:all .2s;letter-spacing:.03em}
+.lang-btn:active{transform:scale(.95)}
+.nav{display:flex;gap:6px}
+.nav button{padding:8px 18px;border-radius:24px;border:1.5px solid transparent;font-size:13px;font-weight:600;font-family:var(--font-b);cursor:pointer;background:transparent;color:var(--text-light);transition:all .25s}
+.nav button.active{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 24px;border-radius:12px;border:none;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-b);transition:all .2s}
+.btn-p{background:var(--green);color:#fff}
+.btn-p:disabled{opacity:.35;cursor:default}
+.btn-p:not(:disabled):active{transform:scale(.97)}
+.btn-s{background:var(--green-light);color:var(--green)}
+.btn-s:active{transform:scale(.97)}
+.btn-d{padding:6px 14px;border-radius:10px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:var(--red-light);color:var(--red);font-family:var(--font-b)}
+.btn-icon{padding:6px 10px;border-radius:10px;border:none;font-size:14px;cursor:pointer;background:transparent;color:var(--text-light)}
+
+/* Inputs */
+.inp{padding:13px 16px;border-radius:12px;border:1.5px solid var(--warm-dark);font-size:15px;font-family:var(--font-b);width:100%;outline:none;background:#fff;transition:border-color .2s}
+.inp:focus{border-color:var(--green)}
+
+/* Utility */
+.mb{margin-bottom:10px}.mt{margin-top:18px}
+.hidden{display:none !important}
+
+/* Folders view */
+.folder-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:#fff;border:1px solid var(--warm-dark);cursor:pointer;transition:all .15s;animation:fadeUp .3s ease both}
+.folder-item:active{transform:scale(.98)}
+.folder-icon{font-size:28px;flex-shrink:0}
+.folder-info{flex:1;min-width:0}
+.folder-name{font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.folder-count{font-size:12px;color:var(--text-light);margin-top:2px}
+.folder-actions{display:flex;gap:4px;flex-shrink:0}
+.folder-list{display:flex;flex-direction:column;gap:8px}
+
+.section-lbl{font-size:12px;color:var(--text-light);font-weight:600;margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+
+.add-box{padding:20px;border-radius:18px;background:#fff;border:1.5px dashed var(--warm-dark);margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.add-box .lbl{font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+
+.preview{width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-bottom:12px;display:none}
+.preview.on{display:block}
+
+/* Card list */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:#fff;border:1px solid var(--warm-dark);animation:fadeUp .3s ease both}
+.thumb{width:52px;height:52px;border-radius:12px;object-fit:cover;flex-shrink:0}
+.info{flex:1;min-width:0}
+.name{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.surname{font-size:12px;color:var(--text-light);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
+.stats{font-size:11px;color:var(--text-light);margin-top:3px}
+.actions{display:flex;gap:4px;flex-shrink:0}
+.edit-row{display:flex;gap:6px}
+.edit-row input{flex:1;padding:7px 10px;font-size:14px}
+.edit-row button{padding:7px 14px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b)}
+
+.empty{text-align:center;padding:50px 20px;color:var(--text-light);font-size:14px;line-height:1.7}
+.empty span{font-size:32px;display:block;margin-bottom:12px}
+
+/* Back button */
+.back-btn{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;background:none;border:none;font-family:var(--font-b);padding:0;margin-bottom:16px}
+.back-btn:active{opacity:.6}
+
+/* Quiz */
+.qbar{display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);font-weight:600;margin-bottom:14px}
+.track{height:4px;border-radius:3px;background:var(--warm-dark);margin-bottom:22px;overflow:hidden}
+.fill{height:100%;background:var(--green);border-radius:3px;transition:width .5s ease}
+.q-photo-wrap{border-radius:20px;overflow:hidden;border:1.5px solid var(--warm-dark);margin-bottom:18px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.q-photo{width:100%;max-height:340px;object-fit:cover;display:block}
+.q-photo-wrap{border-radius:20px;overflow:hidden;border:1.5px solid var(--warm-dark);margin-bottom:18px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.06);position:relative;cursor:pointer;-webkit-user-select:none;user-select:none}
+.tap-hint{position:absolute;bottom:0;left:0;right:0;padding:12px;text-align:center;font-size:13px;font-weight:600;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.5));pointer-events:none;transition:opacity .3s}
+.tap-hint.hide{opacity:0}
+.tap-prompt{font-size:15px;color:var(--text-light);font-weight:600;margin-bottom:4px}
+.judge-btns{display:flex;gap:10px;margin-top:8px}
+.judge-yes{flex:1;background:#E8F8EE;color:var(--correct);border-radius:12px;padding:14px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:var(--font-b);transition:transform .15s}
+.judge-no{flex:1;background:#FDE8E8;color:var(--wrong);border-radius:12px;padding:14px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:var(--font-b);transition:transform .15s}
+.judge-yes:active,.judge-no:active{transform:scale(.96)}
+
+.res{text-align:center;animation:fadeUp .25s ease}
+.badge{display:inline-block;padding:4px 14px;border-radius:12px;font-size:13px;font-weight:700;margin-bottom:10px}
+.badge-ok{background:#E8F8EE;color:var(--correct)}
+.badge-ko{background:#FDE8E8;color:var(--wrong)}
+.ans{font-family:var(--font-d);font-size:26px;margin-bottom:4px}
+.ans-surname{font-size:16px;color:var(--text-light);margin-bottom:18px;text-transform:uppercase;letter-spacing:.04em}
+
+.fin{text-align:center;padding:36px 0;animation:fadeUp .4s ease}
+.fin-n{font-family:var(--font-d);font-size:36px;margin-bottom:24px}
+.fin-b{display:flex;gap:8px;flex-direction:column}
+
+.setup-box{padding:20px;border-radius:18px;background:#fff;border:1px solid var(--warm-dark);box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.setup-box .lbl{margin-bottom:16px}
+.setup-options{display:flex;flex-wrap:wrap;gap:8px}
+.setup-opt{padding:12px 0;border-radius:12px;border:1.5px solid var(--warm-dark);font-size:15px;font-weight:600;font-family:var(--font-b);cursor:pointer;background:#fff;color:var(--text);transition:all .2s;flex:1;min-width:70px;text-align:center}
+.setup-opt:active{transform:scale(.96)}
+.setup-opt:hover{border-color:var(--green);color:var(--green)}
+
+/* IO bar */
+.io-bar{margin-top:28px;padding-top:20px;border-top:1px solid var(--warm-dark);display:flex;gap:8px}
+.io-bar .btn{font-size:13px;padding:11px 16px}
+
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;animation:toastIn .3s ease,toastOut .3s ease 2s forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes toastOut{from{opacity:1}to{opacity:0}}
+
+/* Confirm */
+.confirm-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.confirm-box{background:#fff;border-radius:18px;padding:24px;max-width:300px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.15)}
+.confirm-box p{font-size:15px;margin-bottom:18px;line-height:1.5}
+.confirm-btns{display:flex;gap:8px}
+.confirm-btns button{flex:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1 onclick="goHome()">Visages</h1>
+    <div class="header-right">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+      <div class="nav" id="navBar">
+        <button id="navDeck" class="active" onclick="showDeck()" data-i18n="nav_cards">Cartes</button>
+        <button id="navQuiz" onclick="startQuiz()" data-i18n="nav_quiz">Quiz</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== FOLDERS VIEW ===== -->
+  <div id="foldersView">
+    <div class="add-box">
+      <div class="lbl" data-i18n="new_class">Nouvelle classe</div>
+      <input type="text" id="folderInput" class="inp mb" data-i18n-placeholder="class_placeholder" placeholder="Ex : L1 Maths 2026" onkeydown="if(event.key==='Enter')addFolder()">
+      <button class="btn btn-p" id="addFolderBtn" onclick="addFolder()" disabled data-i18n="create">Créer</button>
+    </div>
+    <div class="section-lbl" id="foldersCount"></div>
+    <div class="folder-list" id="folderList"></div>
+    <div class="empty hidden" id="foldersEmpty"><span>📁</span><span data-i18n="empty_folders">Crée une classe pour commencer<br>à ajouter des visages.</span></div>
+    <div class="io-bar hidden" id="ioBarGlobal">
+      <button class="btn btn-s" onclick="document.getElementById('importGlobalInput').click()" data-i18n="import_class">📥 Importer une classe (.json)</button>
+      <input type="file" id="importGlobalInput" accept=".json" onchange="importFolder(event)" style="display:none">
+    </div>
+  </div>
+
+  <!-- ===== DECK VIEW ===== -->
+  <div id="deckView" class="hidden">
+    <button class="back-btn" onclick="goHome()" data-i18n="back_classes">← Classes</button>
+    <div class="add-box">
+      <div class="lbl" data-i18n="add_person">Ajouter une personne</div>
+      <img id="preview" class="preview" alt="aperçu">
+      <input type="file" id="fileInput" accept="image/*" onchange="onPhoto(event)" style="display:none">
+      <button class="btn btn-s mb" onclick="document.getElementById('fileInput').click()">
+        <span style="font-size:18px">📷</span>
+        <span id="photoLbl" data-i18n="choose_photo">Choisir une photo</span>
+      </button>
+      <input type="text" id="firstNameInput" class="inp mb" data-i18n-placeholder="first_name" placeholder="Prénom" oninput="updAdd()" onkeydown="if(event.key==='Enter')document.getElementById('lastNameInput').focus()">
+      <input type="text" id="lastNameInput" class="inp mb" data-i18n-placeholder="last_name" placeholder="NOM (facultatif)" oninput="updAdd()" onkeydown="if(event.key==='Enter')addCard()" style="text-transform:uppercase">
+      <button class="btn btn-p" id="addBtn" onclick="addCard()" disabled data-i18n="add">Ajouter</button>
+    </div>
+    <div class="section-lbl hidden" id="countLbl"></div>
+    <div class="list" id="cardList"></div>
+    <div class="empty hidden" id="emptyMsg"><span>👤</span><span data-i18n="empty_cards">Ajoute des visages<br>pour les réviser.</span></div>
+    <div class="io-bar hidden" id="ioBar">
+      <button class="btn btn-s" onclick="exportFolder()" data-i18n="export">📤 Exporter</button>
+      <button class="btn btn-s" onclick="document.getElementById('importInput').click()" data-i18n="import">📥 Importer</button>
+      <input type="file" id="importInput" accept=".json" onchange="importCards(event)" style="display:none">
+    </div>
+  </div>
+
+  <!-- ===== QUIZ VIEW ===== -->
+  <div id="quizView" class="hidden">
+    <!-- Setup screen -->
+    <div id="quizSetup">
+      <button class="back-btn" onclick="showDeck()" data-i18n="back_cards">← Cartes</button>
+      <div class="setup-box">
+        <div class="lbl" data-i18n="pick_count">Nombre d'élèves à piocher</div>
+        <div class="setup-options" id="setupOptions"></div>
+        <button class="btn btn-p mt" id="allBtn" onclick="launchQuiz(0)" data-i18n="all_class">Toute la classe</button>
+      </div>
+    </div>
+    <!-- Active quiz -->
+    <div id="quizActive" class="hidden">
+      <button class="back-btn" onclick="showSetup()" data-i18n="back_return">← Retour</button>
+      <div class="qbar"><span id="qProg"></span><span id="qScore"></span></div>
+      <div class="track"><div class="fill" id="qFill"></div></div>
+      <div class="q-photo-wrap" id="qPhotoWrap" onclick="revealName()">
+        <img id="qPhoto" class="q-photo" alt="Qui est-ce ?">
+        <div class="tap-hint" id="tapHint" data-i18n="tap_reveal">Clique pour révéler</div>
+      </div>
+      <div id="guessUI" class="res">
+        <div class="tap-prompt" data-i18n="who_is">Qui est-ce ?</div>
+      </div>
+      <div id="resUI" class="res hidden">
+        <div class="ans" id="ansName"></div>
+        <div class="ans-surname" id="ansSurname"></div>
+        <div class="judge-btns">
+          <button class="btn judge-no" onclick="judgeCard(false)" data-i18n="didnt_know">✗ Je ne savais pas</button>
+          <button class="btn judge-yes" onclick="judgeCard(true)" data-i18n="knew_it">✓ Je savais</button>
+        </div>
+      </div>
+    </div>
+    <!-- Final score -->
+    <div id="quizFin" class="fin hidden">
+      <div class="fin-n" id="finN"></div>
+      <div class="fin-b">
+        <button class="btn btn-p" onclick="showSetup()" data-i18n="new_quiz">Nouveau quiz</button>
+        <button class="btn btn-s" onclick="showDeck()" data-i18n="back_to_cards">← Retour aux cartes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="confirmOverlay" class="hidden"></div>
+
+<script>
+// ================ IndexedDB ================
+const DB="visages_db2", VER=1, S_FOLDERS="folders", S_CARDS="cards";
+let db=null;
+
+function openDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open(DB,VER);
+    r.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains(S_FOLDERS)) d.createObjectStore(S_FOLDERS,{keyPath:"id"});
+      if(!d.objectStoreNames.contains(S_CARDS)){
+        const s=d.createObjectStore(S_CARDS,{keyPath:"id"});
+        s.createIndex("folderId","folderId",{unique:false});
+      }
+    };
+    r.onsuccess=e=>{db=e.target.result;res(db)};
+    r.onerror=e=>rej(e);
+  });
+}
+function dbAll(store){return new Promise((res,rej)=>{const r=db.transaction(store,"readonly").objectStore(store).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=e=>rej(e)})}
+function dbPut(store,obj){return new Promise((res,rej)=>{const r=db.transaction(store,"readwrite").objectStore(store).put(obj);r.onsuccess=()=>res();r.onerror=e=>rej(e)})}
+function dbDel(store,id){return new Promise((res,rej)=>{const r=db.transaction(store,"readwrite").objectStore(store).delete(id);r.onsuccess=()=>res();r.onerror=e=>rej(e)})}
+function dbByIndex(store,idx,val){return new Promise((res,rej)=>{const r=db.transaction(store,"readonly").objectStore(store).index(idx).getAll(val);r.onsuccess=()=>res(r.result||[]);r.onerror=e=>rej(e)})}
+
+// ================ State ================
+let folders=[], cards=[], currentFolder=null;
+let pendingPhoto=null, editingId=null;
+let quizCards=[], quizIdx=0, flipped=false, score={ok:0,total:0};
+
+// ================ i18n ================
+const LANGS={
+  fr:{
+    nav_cards:"Cartes", nav_quiz:"Quiz",
+    new_class:"Nouvelle classe", class_placeholder:"Ex : L1 Maths 2026", create:"Créer",
+    empty_folders:"Crée une classe pour commencer<br>à ajouter des visages.",
+    import_class:"📥 Importer une classe (.json)",
+    back_classes:"← Classes",
+    add_person:"Ajouter une personne", choose_photo:"Choisir une photo", change_photo:"Changer la photo",
+    first_name:"Prénom", last_name:"NOM (facultatif)", add:"Ajouter",
+    empty_cards:"Ajoute des visages<br>pour les réviser.",
+    export:"📤 Exporter", import:"📥 Importer",
+    back_cards:"← Cartes", pick_count:"Nombre d'élèves à piocher",
+    all_class:"Toute la classe", back_return:"← Retour",
+    tap_reveal:"Clique pour révéler", who_is:"Qui est-ce ?",
+    didnt_know:"✗ Je ne savais pas", knew_it:"✓ Je savais",
+    new_quiz:"Nouveau quiz", back_to_cards:"← Retour aux cartes",
+    n_classes:n=>n+" classe"+(n!==1?"s":""),
+    n_faces:n=>n+" visage"+(n!==1?"s":""),
+    n_cards:n=>n+" carte"+(n!==1?"s":""),
+    correct:"correct",
+    confirm_del_card:"Supprimer cette carte ?",
+    confirm_del_folder:(name)=>"Supprimer « "+name+" » et toutes ses cartes ?",
+    cancel:"Annuler", delete:"Supprimer",
+    min_cards:"Il faut au moins 2 cartes",
+    export_done:"✓ Export téléchargé",
+    import_done:(n)=>"✓ "+n+" carte"+(n!==1?"s":"")+" importée"+(n!==1?"s":""),
+    import_folder_done:(name,n)=>"✓ « "+name+" » importé ("+n+" carte"+(n!==1?"s":"")+")",
+    invalid_file:"✗ Fichier invalide"
+  },
+  en:{
+    nav_cards:"Cards", nav_quiz:"Quiz",
+    new_class:"New class", class_placeholder:"E.g.: Year 10 Maths 2026", create:"Create",
+    empty_folders:"Create a class to start<br>adding faces.",
+    import_class:"📥 Import a class (.json)",
+    back_classes:"← Classes",
+    add_person:"Add a person", choose_photo:"Choose a photo", change_photo:"Change photo",
+    first_name:"First name", last_name:"SURNAME (optional)", add:"Add",
+    empty_cards:"Add faces<br>to start reviewing.",
+    export:"📤 Export", import:"📥 Import",
+    back_cards:"← Cards", pick_count:"Number of students to pick",
+    all_class:"Whole class", back_return:"← Back",
+    tap_reveal:"Tap to reveal", who_is:"Who is this?",
+    didnt_know:"✗ Didn't know", knew_it:"✓ I knew it",
+    new_quiz:"New quiz", back_to_cards:"← Back to cards",
+    n_classes:n=>n+" class"+(n!==1?"es":""),
+    n_faces:n=>n+" face"+(n!==1?"s":""),
+    n_cards:n=>n+" card"+(n!==1?"s":""),
+    correct:"correct",
+    confirm_del_card:"Delete this card?",
+    confirm_del_folder:(name)=>"Delete \""+name+"\" and all its cards?",
+    cancel:"Cancel", delete:"Delete",
+    min_cards:"You need at least 2 cards",
+    export_done:"✓ Export downloaded",
+    import_done:(n)=>"✓ "+n+" card"+(n!==1?"s":"")+" imported",
+    import_folder_done:(name,n)=>"✓ \""+name+"\" imported ("+n+" card"+(n!==1?"s":"")+")",
+    invalid_file:"✗ Invalid file"
+  }
+};
+
+let lang="fr";
+function t(key){return LANGS[lang][key]||key}
+
+function toggleLang(){
+  lang=lang==="fr"?"en":"fr";
+  try{localStorage.setItem("visages_lang",lang)}catch(e){}
+  applyLang();
+}
+
+function applyLang(){
+  document.getElementById("langBtn").textContent=lang==="fr"?"EN":"FR";
+  document.title=lang==="fr"?"Visages":"Faces";
+  // Update all data-i18n elements
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key=el.getAttribute("data-i18n");
+    if(LANGS[lang][key]!==undefined){
+      const val=LANGS[lang][key];
+      el.innerHTML=typeof val==="function"?"":val;
+    }
+  });
+  // Update placeholders
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{
+    const key=el.getAttribute("data-i18n-placeholder");
+    if(LANGS[lang][key]!==undefined) el.placeholder=LANGS[lang][key];
+  });
+  // Re-render dynamic content
+  if(currentFolder){renderDeck();} else {renderFolders();}
+  // Update photoLbl if photo is loaded
+  if(pendingPhoto) document.getElementById("photoLbl").textContent=t("change_photo");
+}
+
+// ================ Init ================
+async function init(){
+  try{const saved=localStorage.getItem("visages_lang");if(saved==="en"||saved==="fr")lang=saved}catch(e){}
+  await openDB();
+  folders=await dbAll(S_FOLDERS);
+  applyLang();
+  renderFolders();
+  document.getElementById("folderInput").addEventListener("input",()=>{
+    document.getElementById("addFolderBtn").disabled=!document.getElementById("folderInput").value.trim();
+  });
+}
+init();
+
+// ================ Helpers ================
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function showToast(msg){const old=document.querySelector(".toast");if(old)old.remove();const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2500)}
+
+// ================ Navigation ================
+function goHome(){
+  currentFolder=null; cards=[];
+  document.getElementById("foldersView").classList.remove("hidden");
+  document.getElementById("deckView").classList.add("hidden");
+  document.getElementById("quizView").classList.add("hidden");
+  document.getElementById("navBar").classList.add("hidden");
+  renderFolders();
+}
+
+async function openFolder(id){
+  currentFolder=folders.find(f=>f.id===id);
+  if(!currentFolder) return;
+  cards=await dbByIndex(S_CARDS,"folderId",id);
+  document.getElementById("foldersView").classList.add("hidden");
+  document.getElementById("deckView").classList.remove("hidden");
+  document.getElementById("quizView").classList.add("hidden");
+  document.getElementById("navBar").classList.remove("hidden");
+  document.getElementById("navDeck").classList.add("active");
+  document.getElementById("navQuiz").classList.remove("active");
+  renderDeck();
+}
+
+function showDeck(){
+  document.getElementById("deckView").classList.remove("hidden");
+  document.getElementById("quizView").classList.add("hidden");
+  document.getElementById("navDeck").classList.add("active");
+  document.getElementById("navQuiz").classList.remove("active");
+}
+
+// ================ Folders CRUD ================
+async function addFolder(){
+  const inp=document.getElementById("folderInput"), name=inp.value.trim();
+  if(!name) return;
+  const folder={id:Date.now().toString(), name, created:Date.now()};
+  folders.push(folder); await dbPut(S_FOLDERS,folder);
+  inp.value=""; document.getElementById("addFolderBtn").disabled=true;
+  renderFolders();
+}
+
+function confirmDelFolder(id){
+  const f=folders.find(x=>x.id===id);
+  const o=document.getElementById("confirmOverlay");
+  o.className="confirm-overlay";
+  o.innerHTML=`<div class="confirm-box"><p>${t("confirm_del_folder")(esc(f.name))}</p>
+    <div class="confirm-btns">
+      <button class="btn btn-s" onclick="closeCfm()">${t("cancel")}</button>
+      <button class="btn-d" style="flex:1;padding:12px;border-radius:12px;font-size:14px" onclick="doDelFolder('${id}')">${t("delete")}</button>
+    </div></div>`;
+}
+
+async function doDelFolder(id){
+  closeCfm();
+  // Delete all cards in this folder
+  const folderCards=await dbByIndex(S_CARDS,"folderId",id);
+  for(const c of folderCards) await dbDel(S_CARDS,c.id);
+  folders=folders.filter(f=>f.id!==id);
+  await dbDel(S_FOLDERS,id);
+  renderFolders();
+}
+
+function startEditFolder(id){
+  editingId=id; renderFolders();
+  const el=document.getElementById("editf-"+id); if(el)el.focus();
+}
+
+async function saveEditFolder(id){
+  const el=document.getElementById("editf-"+id), name=el?el.value.trim():"";
+  if(!name) return;
+  const f=folders.find(x=>x.id===id);
+  if(f){f.name=name; await dbPut(S_FOLDERS,f);}
+  editingId=null; renderFolders();
+}
+
+async function renderFolders(){
+  const list=document.getElementById("folderList");
+  const countEl=document.getElementById("foldersCount");
+  const emptyEl=document.getElementById("foldersEmpty");
+  const ioEl=document.getElementById("ioBarGlobal");
+
+  // Get card counts per folder
+  const allCards=await dbAll(S_CARDS);
+  const countMap={};
+  allCards.forEach(c=>{countMap[c.folderId]=(countMap[c.folderId]||0)+1});
+
+  countEl.textContent=t("n_classes")(folders.length);
+
+  if(!folders.length){
+    list.innerHTML=""; emptyEl.classList.remove("hidden");
+    countEl.classList.add("hidden"); ioEl.classList.remove("hidden");
+    return;
+  }
+  emptyEl.classList.add("hidden"); countEl.classList.remove("hidden");
+  ioEl.classList.remove("hidden");
+
+  list.innerHTML=folders.map((f,i)=>{
+    const n=countMap[f.id]||0;
+    if(editingId===f.id) return `<div class="folder-item" style="animation-delay:${i*30}ms;cursor:default">
+      <div class="folder-icon">📁</div>
+      <div class="info"><div class="edit-row">
+        <input id="editf-${f.id}" class="inp" value="${esc(f.name)}" onkeydown="if(event.key==='Enter')saveEditFolder('${f.id}')">
+        <button onclick="saveEditFolder('${f.id}')">OK</button>
+      </div></div></div>`;
+    return `<div class="folder-item" style="animation-delay:${i*30}ms" onclick="openFolder('${f.id}')">
+      <div class="folder-icon">📁</div>
+      <div class="folder-info">
+        <div class="folder-name">${esc(f.name)}</div>
+        <div class="folder-count">${t("n_faces")(n)}</div>
+      </div>
+      <div class="folder-actions" onclick="event.stopPropagation()">
+        <button class="btn-icon" onclick="startEditFolder('${f.id}')">✏️</button>
+        <button class="btn-d" onclick="confirmDelFolder('${f.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ================ Photo ================
+function onPhoto(e){
+  const file=e.target.files&&e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const max=640;let w=img.width,h=img.height;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max}else{w=Math.round(w*max/h);h=max}}
+      const c=document.createElement("canvas");c.width=w;c.height=h;
+      c.getContext("2d").drawImage(img,0,0,w,h);
+      pendingPhoto=c.toDataURL("image/jpeg",.75);
+      const prev=document.getElementById("preview");
+      prev.src=pendingPhoto;prev.classList.add("on");
+      document.getElementById("photoLbl").textContent=t("change_photo");
+      updAdd();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function updAdd(){document.getElementById("addBtn").disabled=!(document.getElementById("firstNameInput").value.trim()&&pendingPhoto)}
+
+// ================ Cards CRUD ================
+async function addCard(){
+  if(!currentFolder) return;
+  const fnInp=document.getElementById("firstNameInput"),lnInp=document.getElementById("lastNameInput");
+  const firstName=fnInp.value.trim(),lastName=lnInp.value.trim().toUpperCase();
+  if(!firstName||!pendingPhoto) return;
+  const name=lastName?firstName+" "+lastName:firstName;
+  const card={id:Date.now().toString(),folderId:currentFolder.id,name,firstName,lastName,photo:pendingPhoto,score:0,attempts:0};
+  cards.push(card); await dbPut(S_CARDS,card);
+  fnInp.value="";lnInp.value="";pendingPhoto=null;
+  document.getElementById("preview").classList.remove("on");
+  document.getElementById("photoLbl").textContent=t("choose_photo");
+  document.getElementById("fileInput").value="";
+  updAdd();renderDeck();
+}
+
+function confirmDel(id){
+  const o=document.getElementById("confirmOverlay");
+  o.className="confirm-overlay";
+  o.innerHTML=`<div class="confirm-box"><p>${t("confirm_del_card")}</p>
+    <div class="confirm-btns">
+      <button class="btn btn-s" onclick="closeCfm()">${t("cancel")}</button>
+      <button class="btn-d" style="flex:1;padding:12px;border-radius:12px;font-size:14px" onclick="doDel('${id}')">${t("delete")}</button>
+    </div></div>`;
+}
+function closeCfm(){document.getElementById("confirmOverlay").className="hidden"}
+async function doDel(id){closeCfm();cards=cards.filter(c=>c.id!==id);await dbDel(S_CARDS,id);renderDeck()}
+
+function startEditCard(id){editingId=id;renderDeck();const el=document.getElementById("edit-"+id);if(el)el.focus()}
+async function saveEditCard(id){
+  const fnEl=document.getElementById("editfn-"+id),lnEl=document.getElementById("editln-"+id);
+  const firstName=fnEl?fnEl.value.trim():"";
+  const lastName=lnEl?lnEl.value.trim().toUpperCase():"";
+  if(!firstName) return;
+  const card=cards.find(c=>c.id===id);
+  if(card){card.firstName=firstName;card.lastName=lastName;card.name=lastName?firstName+" "+lastName:firstName;await dbPut(S_CARDS,card)}
+  editingId=null;renderDeck();
+}
+
+// ================ Render Deck ================
+function renderDeck(){
+  const list=document.getElementById("cardList"),countEl=document.getElementById("countLbl");
+  const emptyEl=document.getElementById("emptyMsg");
+  const ioEl=document.getElementById("ioBar");
+
+  countEl.textContent=(currentFolder?esc(currentFolder.name)+" — ":"")+t("n_cards")(cards.length);
+
+  if(!cards.length){
+    list.innerHTML="";emptyEl.classList.remove("hidden");
+    countEl.classList.add("hidden");
+    ioEl.classList.add("hidden");
+    return;
+  }
+  emptyEl.classList.add("hidden");countEl.classList.remove("hidden");
+  ioEl.classList.remove("hidden");
+
+  list.innerHTML=cards.map((c,i)=>{
+    const fn=c.firstName||c.name;
+    const ln=c.lastName||"";
+    if(editingId===c.id) return `<div class="item" style="animation-delay:${i*30}ms">
+      <img src="${c.photo}" class="thumb" alt="">
+      <div class="info"><div class="edit-row">
+        <input id="editfn-${c.id}" class="inp" value="${esc(fn)}" placeholder="${t('first_name')}" onkeydown="if(event.key==='Enter')document.getElementById('editln-${c.id}').focus()">
+        <input id="editln-${c.id}" class="inp" value="${esc(ln)}" placeholder="${t('last_name')}" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')saveEditCard('${c.id}')">
+        <button onclick="saveEditCard('${c.id}')">OK</button>
+      </div></div></div>`;
+    const lnHtml=ln?`<div class="surname">${esc(ln)}</div>`:"";
+    const st=c.attempts>0?`<div class="stats">${c.score}/${c.attempts} ${t("correct")}</div>`:"";
+    return `<div class="item" style="animation-delay:${i*30}ms">
+      <img src="${c.photo}" class="thumb" alt="${esc(fn)}">
+      <div class="info"><div class="name">${esc(fn)}</div>${lnHtml}${st}</div>
+      <div class="actions">
+        <button class="btn-icon" onclick="startEditCard('${c.id}')">✏️</button>
+        <button class="btn-d" onclick="confirmDel('${c.id}')">✕</button>
+      </div></div>`;
+  }).join("");
+}
+
+// ================ Quiz ================
+function startQuiz(){
+  if(cards.length<2){showToast(t("min_cards"));return}
+  // Show setup screen
+  document.getElementById("deckView").classList.add("hidden");
+  document.getElementById("quizView").classList.remove("hidden");
+  document.getElementById("navDeck").classList.remove("active");
+  document.getElementById("navQuiz").classList.add("active");
+  showSetup();
+}
+
+function showSetup(){
+  document.getElementById("quizSetup").classList.remove("hidden");
+  document.getElementById("quizActive").classList.add("hidden");
+  document.getElementById("quizFin").classList.add("hidden");
+  // Generate number options based on class size
+  const n=cards.length;
+  const opts=document.getElementById("setupOptions");
+  const choices=[];
+  if(n>=5) choices.push(5);
+  if(n>=10) choices.push(10);
+  if(n>=15) choices.push(15);
+  if(n>=20) choices.push(20);
+  // Always add some smaller options if class is small
+  if(!choices.length){for(let i=2;i<=n;i++) choices.push(i)}
+  opts.innerHTML=choices.map(c=>`<button class="setup-opt" onclick="launchQuiz(${c})">${c}</button>`).join("");
+  document.getElementById("allBtn").textContent=t("all_class")+" ("+n+")";
+}
+
+function launchQuiz(count){
+  const total=count||cards.length;
+  const w=cards.flatMap(c=>Array(Math.max(1,4-c.score)).fill(c));
+  const s=shuffle(w),seen=new Set();
+  quizCards=s.filter(c=>{if(seen.has(c.id))return false;seen.add(c.id);return true}).slice(0,total);
+  quizIdx=0;flipped=false;score={ok:0,total:0};
+  document.getElementById("quizSetup").classList.add("hidden");
+  showQCard();
+}
+
+function showQCard(){
+  document.getElementById("quizActive").classList.remove("hidden");
+  document.getElementById("quizFin").classList.add("hidden");
+  const c=quizCards[quizIdx];
+  document.getElementById("qProg").textContent=(quizIdx+1)+" / "+quizCards.length;
+  document.getElementById("qScore").textContent="✓ "+score.ok+" / "+score.total;
+  document.getElementById("qFill").style.width=((quizIdx/quizCards.length)*100)+"%";
+  document.getElementById("qPhoto").src=c.photo;
+  document.getElementById("guessUI").classList.remove("hidden");
+  document.getElementById("resUI").classList.add("hidden");
+  document.getElementById("tapHint").classList.remove("hide");
+  flipped=false;
+}
+
+function revealName(){
+  if(flipped) return;
+  flipped=true;
+  const c=quizCards[quizIdx];
+  document.getElementById("tapHint").classList.add("hide");
+  document.getElementById("guessUI").classList.add("hidden");
+  document.getElementById("resUI").classList.remove("hidden");
+  document.getElementById("ansName").textContent=c.firstName||c.name;
+  const sEl=document.getElementById("ansSurname");
+  sEl.textContent=c.lastName||"";
+  sEl.style.display=c.lastName?"block":"none";
+}
+
+async function judgeCard(knew){
+  const c=quizCards[quizIdx];
+  score.total++;
+  if(knew) score.ok++;
+  const card=cards.find(x=>x.id===c.id);
+  if(card){card.attempts++;card.score=knew?card.score+1:Math.max(0,card.score-1);await dbPut(S_CARDS,card)}
+  document.getElementById("qScore").textContent="✓ "+score.ok+" / "+score.total;
+  document.getElementById("qFill").style.width=(((quizIdx+1)/quizCards.length)*100)+"%";
+  if(quizIdx+1>=quizCards.length){showFin();return}
+  quizIdx++;showQCard();
+}
+
+function showFin(){
+  document.getElementById("quizActive").classList.add("hidden");
+  document.getElementById("quizFin").classList.remove("hidden");
+  document.getElementById("finN").textContent=score.ok+" / "+score.total;
+}
+
+// ================ Export / Import ================
+function exportFolder(){
+  if(!currentFolder||!cards.length) return;
+  const data={folder:{id:currentFolder.id,name:currentFolder.name},cards:cards};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const safeName=currentFolder.name.replace(/[^a-zA-Z0-9àâäéèêëïîôùûüÿçæœ _-]/g,"").replace(/ /g,"_");
+  a.href=url;a.download="visages_"+safeName+".json";a.click();
+  URL.revokeObjectURL(url);
+  showToast(t("export_done"));
+}
+
+async function importCards(e){
+  const file=e.target.files&&e.target.files[0];
+  if(!file||!currentFolder) return;
+  try{
+    const text=await file.text();
+    const data=JSON.parse(text);
+    // Support both old format (array) and new format ({folder, cards})
+    const arr=Array.isArray(data)?data:(data.cards||[]);
+    let count=0;
+    for(const c of arr){
+      if(!c.id||!c.name||!c.photo) continue;
+      if(cards.find(x=>x.id===c.id)) continue;
+      const card={id:c.id,folderId:currentFolder.id,name:c.name,photo:c.photo,score:c.score||0,attempts:c.attempts||0};
+      cards.push(card);await dbPut(S_CARDS,card);count++;
+    }
+    renderDeck();
+    showToast(t("import_done")(count));
+  }catch(err){showToast(t("invalid_file"))}
+  e.target.value="";
+}
+
+async function importFolder(e){
+  const file=e.target.files&&e.target.files[0];
+  if(!file) return;
+  try{
+    const text=await file.text();
+    const data=JSON.parse(text);
+    if(!data.folder||!data.cards) throw new Error("Format invalide");
+    // Create folder with new id to avoid conflicts
+    const newId=Date.now().toString();
+    const folder={id:newId,name:data.folder.name,created:Date.now()};
+    folders.push(folder);await dbPut(S_FOLDERS,folder);
+    let count=0;
+    for(const c of data.cards){
+      if(!c.name||!c.photo) continue;
+      const card={id:(Date.now()+count).toString(),folderId:newId,name:c.name,photo:c.photo,score:0,attempts:0};
+      await dbPut(S_CARDS,card);count++;
+    }
+    renderFolders();
+    showToast(t("import_folder_done")(data.folder.name,count));
+  }catch(err){showToast(t("invalid_file"))}
+  e.target.value="";
+}
+
+// Hide nav on home
+document.getElementById("navBar").classList.add("hidden");
+</script>
+</body>
+</html>
