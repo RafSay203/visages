@@ -422,11 +422,11 @@ function confirmDelFolder(id){
   const f=folders.find(x=>x.id===id);
   const o=document.getElementById("confirmOverlay");
   o.className="confirm-overlay";
-  o.innerHTML=`<div class="confirm-box"><p>${t("confirm_del_folder")(esc(f.name))}</p>
+  o.innerHTML=`<div class="confirm-box"><p>${t("confirm_del_folder")(esc(f.name))}<\/p>
     <div class="confirm-btns">
-      <button class="btn btn-s" onclick="closeCfm()">${t("cancel")}</button>
-      <button class="btn-d" style="flex:1;padding:12px;border-radius:12px;font-size:14px" onclick="doDelFolder('${id}')">${t("delete")}</button>
-    </div></div>`;
+      <button class="btn btn-s" onclick="closeCfm()">${t("cancel")}<\/button>
+      <button class="btn-d" style="flex:1;padding:12px;border-radius:12px;font-size:14px" onclick="doDelFolder('${id}')">${t("delete")}<\/button>
+    <\/div><\/div>`;
 }
 
 async function doDelFolder(id){
@@ -476,22 +476,22 @@ async function renderFolders(){
   list.innerHTML=folders.map((f,i)=>{
     const n=countMap[f.id]||0;
     if(editingId===f.id) return `<div class="folder-item" style="animation-delay:${i*30}ms;cursor:default">
-      <div class="folder-icon">📁</div>
+      <div class="folder-icon">📁<\/div>
       <div class="info"><div class="edit-row">
         <input id="editf-${f.id}" class="inp" value="${esc(f.name)}" onkeydown="if(event.key==='Enter')saveEditFolder('${f.id}')">
-        <button onclick="saveEditFolder('${f.id}')">OK</button>
-      </div></div></div>`;
+        <button onclick="saveEditFolder('${f.id}')">OK<\/button>
+      <\/div><\/div><\/div>`;
     return `<div class="folder-item" style="animation-delay:${i*30}ms" onclick="openFolder('${f.id}')">
-      <div class="folder-icon">📁</div>
+      <div class="folder-icon">📁<\/div>
       <div class="folder-info">
-        <div class="folder-name">${esc(f.name)}</div>
-        <div class="folder-count">${t("n_faces")(n)}</div>
-      </div>
+        <div class="folder-name">${esc(f.name)}<\/div>
+        <div class="folder-count">${t("n_faces")(n)}<\/div>
+      <\/div>
       <div class="folder-actions" onclick="event.stopPropagation()">
-        <button class="btn-icon" onclick="startEditFolder('${f.id}')">✏️</button>
-        <button class="btn-d" onclick="confirmDelFolder('${f.id}')">✕</button>
-      </div>
-    </div>`;
+        <button class="btn-icon" onclick="startEditFolder('${f.id}')">✏️<\/button>
+        <button class="btn-d" onclick="confirmDelFolder('${f.id}')">✕<\/button>
+      <\/div>
+    <\/div>`;
   }).join("");
 }
 
@@ -538,11 +538,11 @@ async function addCard(){
 function confirmDel(id){
   const o=document.getElementById("confirmOverlay");
   o.className="confirm-overlay";
-  o.innerHTML=`<div class="confirm-box"><p>${t("confirm_del_card")}</p>
+  o.innerHTML=`<div class="confirm-box"><p>${t("confirm_del_card")}<\/p>
     <div class="confirm-btns">
-      <button class="btn btn-s" onclick="closeCfm()">${t("cancel")}</button>
-      <button class="btn-d" style="flex:1;padding:12px;border-radius:12px;font-size:14px" onclick="doDel('${id}')">${t("delete")}</button>
-    </div></div>`;
+      <button class="btn btn-s" onclick="closeCfm()">${t("cancel")}<\/button>
+      <button class="btn-d" style="flex:1;padding:12px;border-radius:12px;font-size:14px" onclick="doDel('${id}')">${t("delete")}<\/button>
+    <\/div><\/div>`;
 }
 function closeCfm(){document.getElementById("confirmOverlay").className="hidden"}
 async function doDel(id){closeCfm();cards=cards.filter(c=>c.id!==id);await dbDel(S_CARDS,id);renderDeck()}
@@ -583,17 +583,17 @@ function renderDeck(){
       <div class="info"><div class="edit-row">
         <input id="editfn-${c.id}" class="inp" value="${esc(fn)}" placeholder="${t('first_name')}" onkeydown="if(event.key==='Enter')document.getElementById('editln-${c.id}').focus()">
         <input id="editln-${c.id}" class="inp" value="${esc(ln)}" placeholder="${t('last_name')}" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')saveEditCard('${c.id}')">
-        <button onclick="saveEditCard('${c.id}')">OK</button>
-      </div></div></div>`;
-    const lnHtml=ln?`<div class="surname">${esc(ln)}</div>`:"";
-    const st=c.attempts>0?`<div class="stats">${c.score}/${c.attempts} ${t("correct")}</div>`:"";
+        <button onclick="saveEditCard('${c.id}')">OK<\/button>
+      <\/div><\/div><\/div>`;
+    const lnHtml=ln?`<div class="surname">${esc(ln)}<\/div>`:"";
+    const st=c.attempts>0?`<div class="stats">${c.score}/${c.attempts} ${t("correct")}<\/div>`:"";
     return `<div class="item" style="animation-delay:${i*30}ms">
       <img src="${c.photo}" class="thumb" alt="${esc(fn)}">
-      <div class="info"><div class="name">${esc(fn)}</div>${lnHtml}${st}</div>
+      <div class="info"><div class="name">${esc(fn)}<\/div>${lnHtml}${st}<\/div>
       <div class="actions">
-        <button class="btn-icon" onclick="startEditCard('${c.id}')">✏️</button>
-        <button class="btn-d" onclick="confirmDel('${c.id}')">✕</button>
-      </div></div>`;
+        <button class="btn-icon" onclick="startEditCard('${c.id}')">✏️<\/button>
+        <button class="btn-d" onclick="confirmDel('${c.id}')">✕<\/button>
+      <\/div><\/div>`;
   }).join("");
 }
 
@@ -622,7 +622,7 @@ function showSetup(){
   if(n>=20) choices.push(20);
   // Always add some smaller options if class is small
   if(!choices.length){for(let i=2;i<=n;i++) choices.push(i)}
-  opts.innerHTML=choices.map(c=>`<button class="setup-opt" onclick="launchQuiz(${c})">${c}</button>`).join("");
+  opts.innerHTML=choices.map(c=>`<button class="setup-opt" onclick="launchQuiz(${c})">${c}<\/button>`).join("");
   document.getElementById("allBtn").textContent=t("all_class")+" ("+n+")";
 }
 
