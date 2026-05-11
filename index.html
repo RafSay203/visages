@@ -107,10 +107,15 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
 .ans-surname{font-size:16px;color:var(--text-light);margin-bottom:18px;text-transform:uppercase;letter-spacing:.04em}
 
 .fin{text-align:center;padding:36px 0;animation:fadeUp .4s ease}
-.fin-e{font-size:52px;margin-bottom:14px}
-.fin-n{font-family:var(--font-d);font-size:36px;margin-bottom:6px}
-.fin-m{font-size:14px;color:var(--text-light);margin-bottom:28px}
+.fin-n{font-family:var(--font-d);font-size:36px;margin-bottom:24px}
 .fin-b{display:flex;gap:8px;flex-direction:column}
+
+.setup-box{padding:20px;border-radius:18px;background:#fff;border:1px solid var(--warm-dark);box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.setup-box .lbl{margin-bottom:16px}
+.setup-options{display:flex;flex-wrap:wrap;gap:8px}
+.setup-opt{padding:12px 0;border-radius:12px;border:1.5px solid var(--warm-dark);font-size:15px;font-weight:600;font-family:var(--font-b);cursor:pointer;background:#fff;color:var(--text);transition:all .2s;flex:1;min-width:70px;text-align:center}
+.setup-opt:active{transform:scale(.96)}
+.setup-opt:hover{border-color:var(--green);color:var(--green)}
 
 /* IO bar */
 .io-bar{margin-top:28px;padding-top:20px;border-top:1px solid var(--warm-dark);display:flex;gap:8px}
@@ -174,7 +179,6 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
     </div>
     <div class="section-lbl hidden" id="countLbl"></div>
     <div class="list" id="cardList"></div>
-    <button class="btn btn-p mt hidden" id="quizBtn" onclick="startQuiz()">Lancer le quiz →</button>
     <div class="empty hidden" id="emptyMsg"><span>👤</span>Ajoute des photos avec des noms<br>pour commencer à réviser.</div>
     <div class="io-bar hidden" id="ioBar">
       <button class="btn btn-s" onclick="exportFolder()">📤 Exporter</button>
@@ -185,8 +189,18 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
 
   <!-- ===== QUIZ VIEW ===== -->
   <div id="quizView" class="hidden">
-    <div id="quizActive">
+    <!-- Setup screen -->
+    <div id="quizSetup">
       <button class="back-btn" onclick="showDeck()">← Cartes</button>
+      <div class="setup-box">
+        <div class="lbl">Nombre d'élèves à piocher</div>
+        <div class="setup-options" id="setupOptions"></div>
+        <button class="btn btn-p mt" id="allBtn" onclick="launchQuiz(0)">Toute la classe</button>
+      </div>
+    </div>
+    <!-- Active quiz -->
+    <div id="quizActive" class="hidden">
+      <button class="back-btn" onclick="showSetup()">← Retour</button>
       <div class="qbar"><span id="qProg"></span><span id="qScore"></span></div>
       <div class="track"><div class="fill" id="qFill"></div></div>
       <div class="q-photo-wrap" id="qPhotoWrap" onclick="revealName()">
@@ -205,12 +219,11 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
         </div>
       </div>
     </div>
+    <!-- Final score -->
     <div id="quizFin" class="fin hidden">
-      <div class="fin-e" id="finE"></div>
       <div class="fin-n" id="finN"></div>
-      <div class="fin-m" id="finM"></div>
       <div class="fin-b">
-        <button class="btn btn-p" onclick="startQuiz()">Recommencer</button>
+        <button class="btn btn-p" onclick="showSetup()">Nouveau quiz</button>
         <button class="btn btn-s" onclick="showDeck()">← Retour aux cartes</button>
       </div>
     </div>
@@ -449,19 +462,18 @@ async function saveEditCard(id){
 // ================ Render Deck ================
 function renderDeck(){
   const list=document.getElementById("cardList"),countEl=document.getElementById("countLbl");
-  const emptyEl=document.getElementById("emptyMsg"),quizBtnEl=document.getElementById("quizBtn");
+  const emptyEl=document.getElementById("emptyMsg");
   const ioEl=document.getElementById("ioBar");
 
   countEl.textContent=(currentFolder?esc(currentFolder.name)+" — ":"")+cards.length+" carte"+(cards.length!==1?"s":"");
 
   if(!cards.length){
     list.innerHTML="";emptyEl.classList.remove("hidden");
-    quizBtnEl.classList.add("hidden");countEl.classList.add("hidden");
+    countEl.classList.add("hidden");
     ioEl.classList.add("hidden");
     return;
   }
   emptyEl.classList.add("hidden");countEl.classList.remove("hidden");
-  quizBtnEl.classList.toggle("hidden",cards.length<2);
   ioEl.classList.remove("hidden");
 
   list.innerHTML=cards.map((c,i)=>{
@@ -488,15 +500,40 @@ function renderDeck(){
 
 // ================ Quiz ================
 function startQuiz(){
-  if(cards.length<2) return;
-  const w=cards.flatMap(c=>Array(Math.max(1,4-c.score)).fill(c));
-  const s=shuffle(w),seen=new Set();
-  quizCards=s.filter(c=>{if(seen.has(c.id))return false;seen.add(c.id);return true}).slice(0,Math.min(cards.length,20));
-  quizIdx=0;flipped=false;score={ok:0,total:0};
+  if(cards.length<2){showToast("Il faut au moins 2 cartes");return}
+  // Show setup screen
   document.getElementById("deckView").classList.add("hidden");
   document.getElementById("quizView").classList.remove("hidden");
   document.getElementById("navDeck").classList.remove("active");
   document.getElementById("navQuiz").classList.add("active");
+  showSetup();
+}
+
+function showSetup(){
+  document.getElementById("quizSetup").classList.remove("hidden");
+  document.getElementById("quizActive").classList.add("hidden");
+  document.getElementById("quizFin").classList.add("hidden");
+  // Generate number options based on class size
+  const n=cards.length;
+  const opts=document.getElementById("setupOptions");
+  const choices=[];
+  if(n>=5) choices.push(5);
+  if(n>=10) choices.push(10);
+  if(n>=15) choices.push(15);
+  if(n>=20) choices.push(20);
+  // Always add some smaller options if class is small
+  if(!choices.length){for(let i=2;i<=n;i++) choices.push(i)}
+  opts.innerHTML=choices.map(c=>`<button class="setup-opt" onclick="launchQuiz(${c})">${c}</button>`).join("");
+  document.getElementById("allBtn").textContent="Toute la classe ("+n+")";
+}
+
+function launchQuiz(count){
+  const total=count||cards.length;
+  const w=cards.flatMap(c=>Array(Math.max(1,4-c.score)).fill(c));
+  const s=shuffle(w),seen=new Set();
+  quizCards=s.filter(c=>{if(seen.has(c.id))return false;seen.add(c.id);return true}).slice(0,total);
+  quizIdx=0;flipped=false;score={ok:0,total:0};
+  document.getElementById("quizSetup").classList.add("hidden");
   showQCard();
 }
 
@@ -535,20 +572,14 @@ async function judgeCard(knew){
   if(card){card.attempts++;card.score=knew?card.score+1:Math.max(0,card.score-1);await dbPut(S_CARDS,card)}
   document.getElementById("qScore").textContent="✓ "+score.ok+" / "+score.total;
   document.getElementById("qFill").style.width=(((quizIdx+1)/quizCards.length)*100)+"%";
-  // Auto-advance
   if(quizIdx+1>=quizCards.length){showFin();return}
   quizIdx++;showQCard();
 }
 
-function updCheck(){} // kept for compatibility
-
 function showFin(){
   document.getElementById("quizActive").classList.add("hidden");
   document.getElementById("quizFin").classList.remove("hidden");
-  const p=score.total>0?score.ok/score.total:0;
-  document.getElementById("finE").textContent=p===1?"🎉":p>=.7?"👏":"💪";
   document.getElementById("finN").textContent=score.ok+" / "+score.total;
-  document.getElementById("finM").textContent=p===1?"Sans faute !":p>=.7?"Bien joué !":"Continue à réviser !";
 }
 
 // ================ Export / Import ================
