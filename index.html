@@ -157,7 +157,7 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
     <div class="folder-list" id="folderList"></div>
     <div class="empty hidden" id="foldersEmpty"><span>📁</span>Crée une classe pour commencer<br>à ajouter des visages.</div>
     <div class="io-bar hidden" id="ioBarGlobal">
-      <button class="btn btn-s" onclick="document.getElementById('importGlobalInput').click()">📥 Importer un dossier</button>
+      <button class="btn btn-s" onclick="document.getElementById('importGlobalInput').click()">📥 Importer une classe (.json)</button>
       <input type="file" id="importGlobalInput" accept=".json" onchange="importFolder(event)" style="display:none">
     </div>
   </div>
@@ -179,7 +179,7 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
     </div>
     <div class="section-lbl hidden" id="countLbl"></div>
     <div class="list" id="cardList"></div>
-    <div class="empty hidden" id="emptyMsg"><span>👤</span>Ajoute des photos avec des noms<br>pour commencer à réviser.</div>
+    <div class="empty hidden" id="emptyMsg"><span>👤</span>Ajoute des visages<br>pour les réviser.</div>
     <div class="io-bar hidden" id="ioBar">
       <button class="btn btn-s" onclick="exportFolder()">📤 Exporter</button>
       <button class="btn btn-s" onclick="document.getElementById('importInput').click()">📥 Importer</button>
@@ -205,7 +205,7 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
       <div class="track"><div class="fill" id="qFill"></div></div>
       <div class="q-photo-wrap" id="qPhotoWrap" onclick="revealName()">
         <img id="qPhoto" class="q-photo" alt="Qui est-ce ?">
-        <div class="tap-hint" id="tapHint">Tape pour révéler</div>
+        <div class="tap-hint" id="tapHint">Clique pour révéler</div>
       </div>
       <div id="guessUI" class="res">
         <div class="tap-prompt">Qui est-ce ?</div>
@@ -215,7 +215,7 @@ header h1{font-family:var(--font-d);font-size:28px;font-weight:400;color:var(--g
         <div class="ans-surname" id="ansSurname"></div>
         <div class="judge-btns">
           <button class="btn judge-no" onclick="judgeCard(false)">✗ Je ne savais pas</button>
-          <button class="btn judge-yes" onclick="judgeCard(true)">✓ Je savais !</button>
+          <button class="btn judge-yes" onclick="judgeCard(true)">✓ Je savais</button>
         </div>
       </div>
     </div>
