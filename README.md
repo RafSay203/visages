@@ -10,6 +10,8 @@ Utilisable sans téléchargement au lien : https://rafsay203.github.io/visages/
 
 Codé avec Claude AI.
 
+-------------------------------------------------------------------------------
+
 EN
 
 App for creating and using flashcards to quickly learn the names of students in a class.  
