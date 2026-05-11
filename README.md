@@ -10,7 +10,7 @@ Utilisable sans téléchargement au lien : https://rafsay203.github.io/visages/
 
 Codé avec Claude AI.
 
--------------------------------------------------------------------------------
+-------------------------
 
 EN
 
