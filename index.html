@@ -170,6 +170,38 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .crop-btns{display:flex;gap:8px;margin-top:16px}
 .crop-btns button{flex:1}
 .thumb-btn{cursor:pointer;position:relative}
+
+/* Trombinoscope import */
+.sheet-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--warm);z-index:160;overflow-y:auto;animation:fadeIn .15s ease}
+.sheet-inner{max-width:520px;margin:0 auto;padding:16px 18px 30px}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.sheet-title{font-family:var(--font-d);font-size:19px;font-weight:600;color:var(--accent-deep)}
+.sheet-close{width:34px;height:34px;flex-shrink:0;border-radius:var(--r-sm);border:1.5px solid var(--warm-dark);background:#fff;color:var(--text-light);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sheet-hint{font-size:12.5px;color:var(--text-light);line-height:1.5;margin-bottom:12px}
+.sheet-viewport{position:relative;overflow:auto;background:#25241F;border-radius:var(--r-md);height:44vh;min-height:210px;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch}
+.sheet-canvas{position:relative}
+.sheet-canvas img{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-select:none;user-select:none}
+.sheet-sel{position:absolute;border:2px solid var(--accent);box-shadow:0 0 0 9999px rgba(0,0,0,.5);cursor:move;touch-action:none}
+.sheet-handle{position:absolute;width:22px;height:22px;background:#fff;border:2px solid var(--accent-deep);border-radius:50%;touch-action:none}
+.sheet-handle[data-h="nw"]{left:-12px;top:-12px;cursor:nwse-resize}
+.sheet-handle[data-h="ne"]{right:-12px;top:-12px;cursor:nesw-resize}
+.sheet-handle[data-h="sw"]{left:-12px;bottom:-12px;cursor:nesw-resize}
+.sheet-handle[data-h="se"]{right:-12px;bottom:-12px;cursor:nwse-resize}
+.sheet-bar{display:flex;align-items:center;gap:9px;margin:11px 0 14px}
+.sheet-bar input[type=range]{flex:1;min-width:0;accent-color:var(--accent-deep)}
+.zoom-btn{width:34px;height:34px;flex-shrink:0;border-radius:var(--r-sm);border:1.5px solid var(--warm-dark);background:#fff;color:var(--accent-deep);font-family:var(--font-b);font-size:17px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.zoom-btn:active{transform:scale(.94)}
+.sheet-pages{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--text-light);flex-shrink:0}
+.sheet-pages button{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--warm-dark);background:#fff;color:var(--accent-deep);font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer}
+.sheet-pages button:disabled{opacity:.35;cursor:default}
+.sheet-fields{display:flex;gap:8px;margin-bottom:10px}
+.sheet-fields .inp{flex:1;min-width:0}
+.sheet-added-lbl{font-size:12px;color:var(--text-light);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin:20px 0 10px}
+.sheet-added{display:flex;flex-wrap:wrap;gap:7px}
+.sheet-added figure{width:52px}
+.sheet-added img{width:52px;height:52px;object-fit:cover;border-radius:var(--r-sm);border:1.5px solid var(--warm-dark);display:block}
+.sheet-added figcaption{font-size:10px;color:var(--text-light);margin-top:3px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet-loading{display:flex;align-items:center;justify-content:center;height:44vh;min-height:210px;color:var(--text-light);font-size:14px;font-weight:600}
 </style>
 </head>
 <body>
@@ -220,6 +252,11 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
       <input type="text" id="lastNameInput" class="inp mb" data-i18n-placeholder="last_name" placeholder="NOM (facultatif)" oninput="updAdd()" onkeydown="if(event.key==='Enter')addCard()" style="text-transform:uppercase">
       <button class="btn btn-p" id="addBtn" onclick="addCard()" disabled data-i18n="add">Ajouter</button>
     </div>
+    <button class="btn btn-s mb" style="margin-bottom:24px" onclick="document.getElementById('sheetInput').click()">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><circle cx="15.5" cy="9.5" r="1.8"/><circle cx="8.5" cy="16" r="1.8"/><circle cx="15.5" cy="16" r="1.8"/></svg>
+      <span data-i18n="sheet_import">Importer un trombinoscope</span>
+    </button>
+    <input type="file" id="sheetInput" accept="image/*,application/pdf,.pdf" onchange="onSheetFile(event)" style="display:none">
     <div class="section-lbl hidden" id="countLbl"></div>
     <div class="list" id="cardList"></div>
     <div class="empty hidden" id="emptyMsg"><span class="empty-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.6"/><path d="M5 20c0-3.6 3.1-6.4 7-6.4s7 2.8 7 6.4"/></svg></span><span data-i18n="empty_cards">Ajoute des visages<br>pour les réviser.</span></div>
@@ -275,6 +312,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 
 <div id="confirmOverlay" class="hidden"></div>
 <div id="cropOverlay" class="hidden"></div>
+<div id="sheetOverlay" class="hidden"></div>
 
 <script>
 // ================ IndexedDB ================
@@ -324,6 +362,16 @@ const LANGS={
     add_person:"Ajouter une personne", choose_photo:"Choisir une photo", change_photo:"Changer la photo",
     first_name:"Prénom", last_name:"NOM (facultatif)", add:"Ajouter",
     crop_photo:"Rogner la photo", crop_apply:"Valider",
+    last_name_short:"NOM",
+    sheet_import:"Importer un trombinoscope",
+    sheet_title:"Trombinoscope",
+    sheet_hint:"Touche un visage pour y placer le cadre, ajuste-le avec les coins, puis saisis le nom.",
+    sheet_add:"Ajouter cet élève",
+    sheet_done:"Terminer",
+    sheet_loading:"Lecture du fichier…",
+    sheet_page:"Page",
+    sheet_added_n:n=>n+" élève"+(n!==1?"s":"")+" ajouté"+(n!==1?"s":""),
+    sheet_bad_file:"✗ Fichier illisible (JPG, PNG ou PDF attendu)",
     empty_cards:"Ajoute des visages<br>pour les réviser.",
     export:"Exporter", import:"Importer",
     back_cards:"← Cartes", pick_count:"Nombre d'élèves à piocher",
@@ -353,6 +401,16 @@ const LANGS={
     add_person:"Add a person", choose_photo:"Choose a photo", change_photo:"Change photo",
     first_name:"First name", last_name:"SURNAME (optional)", add:"Add",
     crop_photo:"Crop photo", crop_apply:"Apply",
+    last_name_short:"SURNAME",
+    sheet_import:"Import a class photo sheet",
+    sheet_title:"Class photo sheet",
+    sheet_hint:"Tap a face to place the frame on it, adjust it with the corners, then type the name.",
+    sheet_add:"Add this student",
+    sheet_done:"Done",
+    sheet_loading:"Reading file…",
+    sheet_page:"Page",
+    sheet_added_n:n=>n+" student"+(n!==1?"s":"")+" added",
+    sheet_bad_file:"✗ Unreadable file (JPG, PNG or PDF expected)",
     empty_cards:"Add faces<br>to start reviewing.",
     export:"Export", import:"Import",
     back_cards:"← Cards", pick_count:"Number of students to pick",
@@ -681,6 +739,355 @@ function confirmCrop(){
   };
   img.src=src;
 }
+
+// ================ Trombinoscope import ================
+// A full sheet (JPG/PNG, or a PDF page rendered to a canvas) is shown in a
+// zoomable/pannable viewport. The user places a frame over each face, types the
+// name, and the frame auto-advances to the next face using the grid pitch it
+// learned from the previous two placements.
+let sheet=null;
+const SHEET_MAX_PX=2600;   // longest side kept for the sheet itself
+const SHEET_PDF_PX=2200;   // target width when rasterising a PDF page
+
+function loadPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  return new Promise((res,rej)=>{
+    const s=document.createElement("script");
+    s.src="vendor/pdfjs/pdf.min.js";
+    s.onload=()=>{
+      if(!window.pdfjsLib) return rej(new Error("pdfjs missing"));
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc="vendor/pdfjs/pdf.worker.min.js";
+      res(window.pdfjsLib);
+    };
+    s.onerror=()=>rej(new Error("pdfjs unreachable"));
+    document.head.appendChild(s);
+  });
+}
+
+function loadImg(src){
+  return new Promise((res,rej)=>{
+    const i=new Image();
+    i.onload=()=>res(i);
+    i.onerror=rej;
+    i.src=src;
+  });
+}
+
+// Normalise any bitmap file into a sheet-sized JPEG data URL (also applies EXIF rotation).
+async function fileToSheet(file){
+  const dataUrl=await new Promise((res,rej)=>{
+    const r=new FileReader();r.onload=ev=>res(ev.target.result);r.onerror=rej;r.readAsDataURL(file);
+  });
+  const img=await loadImg(dataUrl);
+  let w=img.naturalWidth,h=img.naturalHeight;
+  if(w<=SHEET_MAX_PX&&h<=SHEET_MAX_PX) return dataUrl;
+  if(w>h){h=Math.round(h*SHEET_MAX_PX/w);w=SHEET_MAX_PX}else{w=Math.round(w*SHEET_MAX_PX/h);h=SHEET_MAX_PX}
+  const c=document.createElement("canvas");c.width=w;c.height=h;
+  c.getContext("2d").drawImage(img,0,0,w,h);
+  return c.toDataURL("image/jpeg",.9);
+}
+
+async function pdfPageToSheet(doc,n){
+  const page=await doc.getPage(n);
+  const base=page.getViewport({scale:1});
+  const vp=page.getViewport({scale:Math.min(SHEET_PDF_PX/base.width,3)});
+  const c=document.createElement("canvas");
+  c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+  const ctx=c.getContext("2d");
+  ctx.fillStyle="#fff";ctx.fillRect(0,0,c.width,c.height); // PDFs are transparent; JPEG would go black
+  // intent "print" is the offscreen path: pdf.js chains its render chunks with
+  // promises instead of requestAnimationFrame, which never fires while the tab
+  // is hidden — otherwise switching apps mid-import stalls the render forever.
+  await page.render({canvasContext:ctx,viewport:vp,intent:"print"}).promise;
+  return c.toDataURL("image/jpeg",.9);
+}
+
+async function onSheetFile(e){
+  const file=e.target.files&&e.target.files[0];
+  e.target.value="";
+  if(!file||!currentFolder) return;
+  const o=document.getElementById("sheetOverlay");
+  o.className="sheet-overlay";
+  o.innerHTML=`<div class="sheet-inner"><div class="sheet-loading">${t("sheet_loading")}<\/div><\/div>`;
+  try{
+    if(file.type==="application/pdf"||/\.pdf$/i.test(file.name)){
+      const lib=await loadPdfJs();
+      const doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+      await openSheet(await pdfPageToSheet(doc,1),{pdfDoc:doc,pages:doc.numPages,page:1});
+    }else{
+      await openSheet(await fileToSheet(file),{pdfDoc:null,pages:1,page:1});
+    }
+  }catch(err){
+    o.className="hidden";sheet=null;
+    showToast(t("sheet_bad_file"));
+  }
+}
+
+async function openSheet(src,meta){
+  const img=await loadImg(src);
+  const keep=sheet; // switching PDF page: keep what we already collected
+  sheet={
+    src,img,natW:img.naturalWidth,natH:img.naturalHeight,
+    pdfDoc:meta.pdfDoc,pages:meta.pages,page:meta.page,
+    zoom:1,minZoom:1,maxZoom:1,
+    sel:null,
+    added:keep?keep.added:[],
+    lastAdd:null,pitchX:0,pitchY:0,rowX0:0
+  };
+  // Start near the top-left, where the first portrait of a sheet almost always sits.
+  const side=Math.round(Math.min(sheet.natW,sheet.natH)/6);
+  const s=Math.max(40,Math.min(side,sheet.natW,sheet.natH));
+  sheet.sel={x:0,y:0,w:s,h:s};
+  placeSel(Math.round(sheet.natW*0.06),Math.round(sheet.natH*0.12));
+  renderSheet();
+}
+
+function renderSheet(){
+  const pg=sheet.pages>1?`<div class="sheet-pages">
+      <button onclick="sheetPage(-1)" ${sheet.page<=1?"disabled":""} aria-label="-">‹<\/button>
+      <span>${t("sheet_page")} ${sheet.page}/${sheet.pages}<\/span>
+      <button onclick="sheetPage(1)" ${sheet.page>=sheet.pages?"disabled":""} aria-label="+">›<\/button>
+    <\/div>`:"";
+  const o=document.getElementById("sheetOverlay");
+  o.className="sheet-overlay";
+  o.innerHTML=`<div class="sheet-inner">
+    <div class="sheet-head">
+      <span class="sheet-title">${t("sheet_title")}<\/span>
+      <button class="sheet-close" onclick="closeSheet()" aria-label="${t("sheet_done")}">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/><\/svg>
+      <\/button>
+    <\/div>
+    <div class="sheet-hint">${t("sheet_hint")}<\/div>
+    <div class="sheet-viewport" id="sheetViewport">
+      <div class="sheet-canvas" id="sheetCanvas">
+        <img src="${sheet.src}" alt="">
+        <div class="sheet-sel" id="sheetSel">
+          <div class="sheet-handle" data-h="nw"><\/div>
+          <div class="sheet-handle" data-h="ne"><\/div>
+          <div class="sheet-handle" data-h="sw"><\/div>
+          <div class="sheet-handle" data-h="se"><\/div>
+        <\/div>
+      <\/div>
+    <\/div>
+    <div class="sheet-bar">
+      <button class="zoom-btn" onclick="sheetZoomStep(-1)" aria-label="zoom -">−<\/button>
+      <input type="range" id="sheetZoom" min="0" max="100" value="0" oninput="sheetZoomTo(+this.value)" aria-label="zoom">
+      <button class="zoom-btn" onclick="sheetZoomStep(1)" aria-label="zoom +">+<\/button>
+      ${pg}
+    <\/div>
+    <div class="sheet-fields">
+      <input type="text" id="sheetFn" class="inp" placeholder="${t("first_name")}" oninput="updSheetAdd()" onkeydown="if(event.key==='Enter')document.getElementById('sheetLn').focus()">
+      <input type="text" id="sheetLn" class="inp" placeholder="${t("last_name_short")}" style="text-transform:uppercase" oninput="updSheetAdd()" onkeydown="if(event.key==='Enter')sheetAdd()">
+    <\/div>
+    <button class="btn btn-p" id="sheetAddBtn" onclick="sheetAdd()" disabled>${t("sheet_add")}<\/button>
+    <div id="sheetAddedWrap"><\/div>
+    <button class="btn btn-s mt" onclick="closeSheet()">${t("sheet_done")}<\/button>
+  <\/div>`;
+
+  const vp=document.getElementById("sheetViewport");
+  // Fit the whole sheet on screen first, allow up to 4x that (and never below 1:1 usefulness).
+  sheet.minZoom=Math.min(vp.clientWidth/sheet.natW,1);
+  sheet.maxZoom=Math.max(sheet.minZoom*6,1.2);
+  sheet.zoom=sheet.minZoom;
+  layoutSheet();
+  renderSheetAdded();
+  bindSheetPointers();
+}
+
+function layoutSheet(){
+  const cv=document.getElementById("sheetCanvas");
+  if(!cv||!sheet) return;
+  cv.style.width=Math.round(sheet.natW*sheet.zoom)+"px";
+  cv.style.height=Math.round(sheet.natH*sheet.zoom)+"px";
+  const z=Math.log(sheet.zoom/sheet.minZoom)/Math.log(sheet.maxZoom/sheet.minZoom);
+  const sl=document.getElementById("sheetZoom");
+  if(sl) sl.value=Math.round(z*100);
+  layoutSel();
+}
+
+function layoutSel(){
+  const el=document.getElementById("sheetSel");
+  if(!el||!sheet) return;
+  const{x,y,w,h}=sheet.sel,z=sheet.zoom;
+  el.style.left=x*z+"px";el.style.top=y*z+"px";
+  el.style.width=w*z+"px";el.style.height=h*z+"px";
+}
+
+function sheetZoomTo(v){
+  const vp=document.getElementById("sheetViewport");
+  const old=sheet.zoom;
+  // Keep whatever is at the centre of the viewport at the centre after zooming.
+  const cx=(vp.scrollLeft+vp.clientWidth/2)/old, cy=(vp.scrollTop+vp.clientHeight/2)/old;
+  sheet.zoom=sheet.minZoom*Math.pow(sheet.maxZoom/sheet.minZoom,Math.min(100,Math.max(0,v))/100);
+  layoutSheet();
+  vp.scrollLeft=cx*sheet.zoom-vp.clientWidth/2;
+  vp.scrollTop=cy*sheet.zoom-vp.clientHeight/2;
+}
+
+function sheetZoomStep(dir){
+  const cur=+document.getElementById("sheetZoom").value;
+  sheetZoomTo(cur+dir*12);
+}
+
+function scrollSelIntoView(){
+  const vp=document.getElementById("sheetViewport");
+  if(!vp) return;
+  const{x,y,w,h}=sheet.sel,z=sheet.zoom;
+  vp.scrollLeft=(x+w/2)*z-vp.clientWidth/2;
+  vp.scrollTop=(y+h/2)*z-vp.clientHeight/2;
+}
+
+function placeSel(x,y){
+  const s=sheet.sel;
+  s.x=Math.min(Math.max(0,Math.round(x)),sheet.natW-s.w);
+  s.y=Math.min(Math.max(0,Math.round(y)),sheet.natH-s.h);
+  layoutSel();
+}
+
+function bindSheetPointers(){
+  const vp=document.getElementById("sheetViewport");
+  const cv=document.getElementById("sheetCanvas");
+  const sel=document.getElementById("sheetSel");
+  sel.addEventListener("pointerdown",e=>startSheetDrag(e,"move"));
+  sel.querySelectorAll(".sheet-handle").forEach(h=>{
+    h.addEventListener("pointerdown",e=>{e.stopPropagation();startSheetDrag(e,h.dataset.h)});
+  });
+  // Tap on bare image = drop the frame there. A drag/scroll must not count as a tap.
+  let tap=null;
+  cv.addEventListener("pointerdown",e=>{
+    if(e.target.closest(".sheet-sel")) return;
+    tap={x:e.clientX,y:e.clientY,sl:vp.scrollLeft,st:vp.scrollTop};
+  });
+  cv.addEventListener("pointercancel",()=>{tap=null});
+  cv.addEventListener("pointerup",e=>{
+    if(!tap) return;
+    const moved=Math.abs(e.clientX-tap.x)>8||Math.abs(e.clientY-tap.y)>8;
+    const scrolled=Math.abs(vp.scrollLeft-tap.sl)>2||Math.abs(vp.scrollTop-tap.st)>2;
+    tap=null;
+    if(moved||scrolled) return;
+    const r=cv.getBoundingClientRect();
+    placeSel((e.clientX-r.left)/sheet.zoom-sheet.sel.w/2,(e.clientY-r.top)/sheet.zoom-sheet.sel.h/2);
+  });
+}
+
+function startSheetDrag(e,mode){
+  e.preventDefault();
+  const z=sheet.zoom,x0=e.clientX,y0=e.clientY,st={...sheet.sel};
+  const MIN=24,W=sheet.natW,H=sheet.natH;
+  function onMove(ev){
+    const dx=(ev.clientX-x0)/z,dy=(ev.clientY-y0)/z;
+    let{x,y,w,h}=st;
+    if(mode==="move"){
+      x=Math.min(Math.max(0,st.x+dx),W-w);
+      y=Math.min(Math.max(0,st.y+dy),H-h);
+    }else{
+      let x2=st.x+st.w,y2=st.y+st.h;
+      if(mode.includes("w")){x=Math.min(Math.max(0,st.x+dx),x2-MIN);}
+      if(mode.includes("e")){x2=Math.max(Math.min(W,x2+dx),st.x+MIN);}
+      if(mode.includes("n")){y=Math.min(Math.max(0,st.y+dy),y2-MIN);}
+      if(mode.includes("s")){y2=Math.max(Math.min(H,y2+dy),st.y+MIN);}
+      w=x2-x;h=y2-y;
+    }
+    sheet.sel={x,y,w,h};
+    layoutSel();
+  }
+  function onUp(){
+    document.removeEventListener("pointermove",onMove);
+    document.removeEventListener("pointerup",onUp);
+    document.removeEventListener("pointercancel",onUp);
+  }
+  document.addEventListener("pointermove",onMove);
+  document.addEventListener("pointerup",onUp);
+  document.addEventListener("pointercancel",onUp);
+}
+
+function updSheetAdd(){
+  const btn=document.getElementById("sheetAddBtn");
+  if(btn) btn.disabled=!document.getElementById("sheetFn").value.trim();
+}
+
+function cropFromSheet(){
+  const{sel,img}=sheet;
+  const max=640;let w=sel.w,h=sel.h;
+  if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max}else{w=Math.round(w*max/h);h=max}}
+  const c=document.createElement("canvas");c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));
+  c.getContext("2d").drawImage(img,sel.x,sel.y,sel.w,sel.h,0,0,c.width,c.height);
+  return c.toDataURL("image/jpeg",.82);
+}
+
+async function sheetAdd(){
+  if(!sheet||!currentFolder) return;
+  const fnEl=document.getElementById("sheetFn"),lnEl=document.getElementById("sheetLn");
+  const firstName=fnEl.value.trim(),lastName=lnEl.value.trim().toUpperCase();
+  if(!firstName) return;
+  const name=lastName?firstName+" "+lastName:firstName;
+  const card={id:Date.now().toString()+Math.random().toString(36).slice(2,6),
+    folderId:currentFolder.id,name,firstName,lastName,photo:cropFromSheet(),score:0,attempts:0};
+  cards.push(card);await dbPut(S_CARDS,card);
+  sheet.added.push(card);
+
+  advanceSel();
+  fnEl.value="";lnEl.value="";updSheetAdd();
+  renderSheetAdded();
+  fnEl.focus();
+}
+
+// Learn the grid pitch from consecutive placements, then jump to the next face.
+function advanceSel(){
+  const s=sheet.sel,prev=sheet.lastAdd;
+  if(prev){
+    const dx=s.x-prev.x,dy=s.y-prev.y;
+    if(dx>s.w*0.3&&Math.abs(dy)<s.h*0.5) sheet.pitchX=dx;          // moved along the row
+    else if(dy>s.h*0.3){sheet.pitchY=dy;sheet.rowX0=s.x}           // moved down to a new row
+  }else{
+    sheet.rowX0=s.x;
+  }
+  sheet.lastAdd={x:s.x,y:s.y};
+
+  const px=sheet.pitchX||Math.round(s.w*1.1);
+  // Grid cells scale on both axes, so a known horizontal pitch is the best guess
+  // for the vertical one until an actual row change has been observed.
+  const py=sheet.pitchY||Math.round(px*(s.h/s.w));
+  let nx=s.x+px,ny=s.y;
+  if(nx+s.w>sheet.natW){nx=sheet.rowX0;ny=s.y+py}
+  if(ny+s.h>sheet.natH) return; // bottom of the sheet: leave the frame where it is
+  placeSel(nx,ny);
+  scrollSelIntoView();
+}
+
+function renderSheetAdded(){
+  const wrap=document.getElementById("sheetAddedWrap");
+  if(!wrap) return;
+  if(!sheet.added.length){wrap.innerHTML="";return}
+  wrap.innerHTML=`<div class="sheet-added-lbl">${t("sheet_added_n")(sheet.added.length)}<\/div>
+    <div class="sheet-added">`+sheet.added.map(c=>
+      `<figure><img src="${c.photo}" alt=""><figcaption>${esc(c.firstName)}<\/figcaption><\/figure>`
+    ).join("")+`<\/div>`;
+}
+
+async function sheetPage(d){
+  if(!sheet||!sheet.pdfDoc) return;
+  const n=sheet.page+d;
+  if(n<1||n>sheet.pages) return;
+  const o=document.getElementById("sheetOverlay");
+  o.innerHTML=`<div class="sheet-inner"><div class="sheet-loading">${t("sheet_loading")}<\/div><\/div>`;
+  await openSheet(await pdfPageToSheet(sheet.pdfDoc,n),{pdfDoc:sheet.pdfDoc,pages:sheet.pages,page:n});
+}
+
+function closeSheet(){
+  const n=sheet?sheet.added.length:0;
+  document.getElementById("sheetOverlay").className="hidden";
+  document.getElementById("sheetOverlay").innerHTML="";
+  sheet=null;
+  renderDeck();
+  if(n) showToast(t("sheet_added_n")(n));
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Escape") return;
+  if(sheet) closeSheet();
+  else if(cropState) closeCropper();
+});
 
 // ================ Cards CRUD ================
 async function addCard(){
