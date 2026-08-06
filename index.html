@@ -44,8 +44,8 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .btn-p:not(:disabled):active{transform:scale(.97)}
 .btn-s{background:var(--accent-light);color:var(--accent-deep)}
 .btn-s:active{transform:scale(.97)}
-.btn-d{display:inline-flex;align-items:center;justify-content:center;padding:8px 11px;border-radius:var(--r-sm);border:1.5px solid var(--red-light);cursor:pointer;background:var(--red-light);color:var(--red);font-family:var(--font-b)}
-.btn-icon{display:inline-flex;align-items:center;justify-content:center;padding:8px 11px;border-radius:var(--r-sm);border:1.5px solid var(--accent-light);cursor:pointer;background:var(--accent-light);color:var(--accent-deep)}
+.btn-d{display:inline-flex;align-items:center;justify-content:center;padding:8px 9px;border-radius:var(--r-sm);border:1.5px solid var(--red-light);cursor:pointer;background:var(--red-light);color:var(--red);font-family:var(--font-b)}
+.btn-icon{display:inline-flex;align-items:center;justify-content:center;padding:8px 9px;border-radius:var(--r-sm);border:1.5px solid var(--accent-light);cursor:pointer;background:var(--accent-light);color:var(--accent-deep)}
 .btn-icon:active,.btn-d:active{transform:scale(.95)}
 
 /* Inputs */
@@ -57,9 +57,8 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .hidden{display:none !important}
 
 /* Folders view */
-.folder-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--r-md);background:#fff;border:1px solid var(--warm-dark);cursor:pointer;transition:all .15s;animation:fadeUp .3s ease both}
+.folder-item{display:flex;align-items:center;gap:10px;padding:14px 12px;border-radius:var(--r-md);background:#fff;border:1px solid var(--warm-dark);cursor:pointer;transition:all .15s;animation:fadeUp .3s ease both}
 .folder-item:active{transform:scale(.98)}
-.folder-icon{width:38px;height:38px;border-radius:var(--r-sm);background:var(--accent-light);color:var(--accent-deep);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .folder-info{flex:1;min-width:0}
 .folder-name{font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .folder-count{font-size:12px;color:var(--text-light);margin-top:2px}
@@ -76,8 +75,8 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 
 /* Card list */
 .list{display:flex;flex-direction:column;gap:8px}
-.item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r-md);background:#fff;border:1px solid var(--warm-dark);animation:fadeUp .3s ease both}
-.thumb{width:52px;height:52px;border-radius:var(--r-sm);object-fit:cover;flex-shrink:0}
+.item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-md);background:#fff;border:1px solid var(--warm-dark);animation:fadeUp .3s ease both}
+.thumb{width:48px;height:48px;border-radius:var(--r-sm);object-fit:cover;flex-shrink:0}
 .info{flex:1;min-width:0}
 .name{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .surname{font-size:12px;color:var(--text-light);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
@@ -154,25 +153,44 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
   .nav{gap:4px}
   .nav button{padding:7px 12px;font-size:12px}
   .judge-yes,.judge-no{padding:14px 8px;font-size:14px}
+  .item,.folder-item{gap:8px}
+  .item{padding:10px 10px}
+  .thumb{width:44px;height:44px}
+  .item .grip,.folder-item .grip{width:18px}
+  .actions .btn-icon,.actions .btn-d,.folder-actions .btn-icon,.folder-actions .btn-d{padding:7px 6px}
+  .actions,.folder-actions{gap:3px}
 }
 
 /* Crop tool */
-.crop-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(37,36,31,.55);z-index:150;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease}
+.crop-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(37,36,31,.55);z-index:150;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease;touch-action:none;overscroll-behavior:contain}
 .crop-box{background:#fff;border-radius:var(--r-lg);padding:20px;max-width:400px;width:100%;box-shadow:0 8px 28px rgba(37,36,31,.2)}
 .crop-stage{position:relative;margin:0 auto;background:#111;border-radius:var(--r-sm);overflow:hidden;touch-action:none}
 .crop-stage img{display:block;pointer-events:none;user-select:none;-webkit-user-select:none}
 .crop-sel{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55);cursor:move;touch-action:none}
-.crop-handle{position:absolute;width:20px;height:20px;background:#fff;border:2px solid var(--accent-deep);border-radius:50%;touch-action:none}
-.crop-handle[data-h="nw"]{left:-11px;top:-11px;cursor:nwse-resize}
-.crop-handle[data-h="ne"]{right:-11px;top:-11px;cursor:nesw-resize}
-.crop-handle[data-h="sw"]{left:-11px;bottom:-11px;cursor:nesw-resize}
-.crop-handle[data-h="se"]{right:-11px;bottom:-11px;cursor:nwse-resize}
+/* Corner brackets sit INSIDE the frame, so they are never clipped by the edge of
+   the image the way outside-hanging knobs were. */
+.crop-handle{position:absolute;width:30px;height:30px;touch-action:none}
+.crop-handle::after{content:"";position:absolute;width:15px;height:15px;border:3px solid #fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))}
+.crop-handle[data-h="nw"]{left:-1px;top:-1px;cursor:nwse-resize}
+.crop-handle[data-h="ne"]{right:-1px;top:-1px;cursor:nesw-resize}
+.crop-handle[data-h="sw"]{left:-1px;bottom:-1px;cursor:nesw-resize}
+.crop-handle[data-h="se"]{right:-1px;bottom:-1px;cursor:nwse-resize}
+.crop-handle[data-h="nw"]::after{left:0;top:0;border-right:0;border-bottom:0}
+.crop-handle[data-h="ne"]::after{right:0;top:0;border-left:0;border-bottom:0}
+.crop-handle[data-h="sw"]::after{left:0;bottom:0;border-right:0;border-top:0}
+.crop-handle[data-h="se"]::after{right:0;bottom:0;border-left:0;border-top:0}
 .crop-btns{display:flex;gap:8px;margin-top:16px}
 .crop-btns button{flex:1}
-.thumb-btn{cursor:pointer;position:relative}
+
+/* Drag-to-reorder */
+.grip{flex-shrink:0;width:22px;align-self:stretch;display:flex;align-items:center;justify-content:center;color:var(--text-light);cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.grip:active{cursor:grabbing;color:var(--accent-deep)}
+.reordering{position:relative;z-index:3;box-shadow:0 6px 18px rgba(37,36,31,.18);opacity:.96;cursor:grabbing}
+.reordering,.shifting{animation:none !important}
+.shifting{transition:transform .16s ease}
 
 /* Trombinoscope import */
-.sheet-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--warm);z-index:160;overflow-y:auto;animation:fadeIn .15s ease}
+.sheet-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--warm);z-index:160;overflow-y:auto;animation:fadeIn .15s ease;overscroll-behavior:contain}
 .sheet-inner{max-width:520px;margin:0 auto;padding:16px 18px 30px}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
 .sheet-title{font-family:var(--font-d);font-size:19px;font-weight:600;color:var(--accent-deep)}
@@ -182,11 +200,16 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .sheet-canvas{position:relative}
 .sheet-canvas img{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-select:none;user-select:none}
 .sheet-sel{position:absolute;border:2px solid var(--accent);box-shadow:0 0 0 9999px rgba(0,0,0,.5);cursor:move;touch-action:none}
-.sheet-handle{position:absolute;width:22px;height:22px;background:#fff;border:2px solid var(--accent-deep);border-radius:50%;touch-action:none}
-.sheet-handle[data-h="nw"]{left:-12px;top:-12px;cursor:nwse-resize}
-.sheet-handle[data-h="ne"]{right:-12px;top:-12px;cursor:nesw-resize}
-.sheet-handle[data-h="sw"]{left:-12px;bottom:-12px;cursor:nesw-resize}
-.sheet-handle[data-h="se"]{right:-12px;bottom:-12px;cursor:nwse-resize}
+.sheet-handle{position:absolute;width:30px;height:30px;touch-action:none}
+.sheet-handle::after{content:"";position:absolute;width:15px;height:15px;border:3px solid var(--accent);filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.sheet-handle[data-h="nw"]{left:-1px;top:-1px;cursor:nwse-resize}
+.sheet-handle[data-h="ne"]{right:-1px;top:-1px;cursor:nesw-resize}
+.sheet-handle[data-h="sw"]{left:-1px;bottom:-1px;cursor:nesw-resize}
+.sheet-handle[data-h="se"]{right:-1px;bottom:-1px;cursor:nwse-resize}
+.sheet-handle[data-h="nw"]::after{left:0;top:0;border-right:0;border-bottom:0}
+.sheet-handle[data-h="ne"]::after{right:0;top:0;border-left:0;border-bottom:0}
+.sheet-handle[data-h="sw"]::after{left:0;bottom:0;border-right:0;border-top:0}
+.sheet-handle[data-h="se"]::after{right:0;bottom:0;border-left:0;border-top:0}
 .sheet-bar{display:flex;align-items:center;gap:9px;margin:11px 0 14px}
 .sheet-bar input[type=range]{flex:1;min-width:0;accent-color:var(--accent-deep)}
 .zoom-btn{width:34px;height:34px;flex-shrink:0;border-radius:var(--r-sm);border:1.5px solid var(--warm-dark);background:#fff;color:var(--accent-deep);font-family:var(--font-b);font-size:17px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -237,7 +260,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
   <div id="deckView" class="hidden">
     <button class="back-btn" onclick="goHome()" data-i18n="back_classes">← Classes</button>
     <div class="add-box">
-      <div class="lbl" data-i18n="add_person">Ajouter une personne</div>
+      <div class="lbl" data-i18n="add_person">Ajouter un.e élève</div>
       <img id="preview" class="preview" alt="aperçu">
       <input type="file" id="fileInput" accept="image/*" onchange="onPhoto(event)" style="display:none">
       <button class="btn btn-s mb" onclick="document.getElementById('fileInput').click()">
@@ -341,9 +364,10 @@ function dbByIndex(store,idx,val){return new Promise((res,rej)=>{const r=db.tran
 
 // ================ Icons ================
 const ICONS={
-  folder:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z"/></svg>',
   edit:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="M14.5 7.5l2 2"/></svg>',
-  trash:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/></svg>'
+  trash:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/></svg>',
+  crop:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>',
+  grip:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 8h14"/><path d="M5 12h14"/><path d="M5 16h14"/></svg>'
 };
 
 // ================ State ================
@@ -359,7 +383,7 @@ const LANGS={
     empty_folders:"Crée une classe pour commencer<br>à ajouter des visages.",
     import_class:"Importer une classe (.json)",
     back_classes:"← Classes",
-    add_person:"Ajouter une personne", choose_photo:"Choisir une photo", change_photo:"Changer la photo",
+    add_person:"Ajouter un.e élève", choose_photo:"Choisir une photo", change_photo:"Changer la photo",
     first_name:"Prénom", last_name:"NOM (facultatif)", add:"Ajouter",
     crop_photo:"Rogner la photo", crop_apply:"Valider",
     last_name_short:"NOM",
@@ -374,18 +398,18 @@ const LANGS={
     sheet_bad_file:"✗ Fichier illisible (JPG, PNG ou PDF attendu)",
     empty_cards:"Ajoute des visages<br>pour les réviser.",
     export:"Exporter", import:"Importer",
-    back_cards:"← Cartes", pick_count:"Nombre d'élèves à piocher",
+    back_cards:"← Classe", pick_count:"Nombre d'élèves à piocher",
     all_class:"Toute la classe", back_return:"← Retour",
     tap_reveal:"Clique pour révéler", who_is:"Qui est-ce ?",
     didnt_know:"Je ne savais pas", knew_it:"Je savais",
-    new_quiz:"Nouveau quiz", back_to_cards:"← Retour aux cartes",
+    new_quiz:"Nouveau quiz", back_to_cards:"← Retour à la classe",
     n_classes:n=>n+" classe"+(n!==1?"s":""),
     n_faces:n=>n+" visage"+(n!==1?"s":""),
     n_cards:n=>n+" carte"+(n!==1?"s":""),
     correct:"correct",
     confirm_del_card:"Supprimer cette carte ?",
     confirm_del_folder:(name)=>"Supprimer « "+name+" » et toutes ses cartes ?",
-    cancel:"Annuler", delete:"Supprimer", edit:"Modifier",
+    cancel:"Annuler", delete:"Supprimer", edit:"Modifier", reorder:"Réorganiser",
     min_cards:"Il faut au moins 2 cartes",
     export_done:"✓ Export téléchargé",
     import_done:(n)=>"✓ "+n+" carte"+(n!==1?"s":"")+" importée"+(n!==1?"s":""),
@@ -398,7 +422,7 @@ const LANGS={
     empty_folders:"Create a class to start<br>adding faces.",
     import_class:"Import a class (.json)",
     back_classes:"← Classes",
-    add_person:"Add a person", choose_photo:"Choose a photo", change_photo:"Change photo",
+    add_person:"Add a student", choose_photo:"Choose a photo", change_photo:"Change photo",
     first_name:"First name", last_name:"SURNAME (optional)", add:"Add",
     crop_photo:"Crop photo", crop_apply:"Apply",
     last_name_short:"SURNAME",
@@ -413,18 +437,18 @@ const LANGS={
     sheet_bad_file:"✗ Unreadable file (JPG, PNG or PDF expected)",
     empty_cards:"Add faces<br>to start reviewing.",
     export:"Export", import:"Import",
-    back_cards:"← Cards", pick_count:"Number of students to pick",
+    back_cards:"← Class", pick_count:"Number of students to pick",
     all_class:"Whole class", back_return:"← Back",
     tap_reveal:"Tap to reveal", who_is:"Who is this?",
     didnt_know:"Didn't know", knew_it:"I knew it",
-    new_quiz:"New quiz", back_to_cards:"← Back to cards",
+    new_quiz:"New quiz", back_to_cards:"← Back to class",
     n_classes:n=>n+" class"+(n!==1?"es":""),
     n_faces:n=>n+" face"+(n!==1?"s":""),
     n_cards:n=>n+" card"+(n!==1?"s":""),
     correct:"correct",
     confirm_del_card:"Delete this card?",
     confirm_del_folder:(name)=>"Delete \""+name+"\" and all its cards?",
-    cancel:"Cancel", delete:"Delete", edit:"Edit",
+    cancel:"Cancel", delete:"Delete", edit:"Edit", reorder:"Reorder",
     min_cards:"You need at least 2 cards",
     export_done:"✓ Export downloaded",
     import_done:(n)=>"✓ "+n+" card"+(n!==1?"s":"")+" imported",
@@ -467,7 +491,7 @@ function applyLang(){
 async function init(){
   try{const saved=localStorage.getItem("visages_lang");if(saved==="en"||saved==="fr")lang=saved}catch(e){}
   await openDB();
-  folders=await dbAll(S_FOLDERS);
+  folders=await ensureOrder(await dbAll(S_FOLDERS),S_FOLDERS);
   applyLang();
   renderFolders();
   document.getElementById("folderInput").addEventListener("input",()=>{
@@ -478,6 +502,31 @@ init();
 
 // ================ Helpers ================
 function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()}
+function nextOrder(list){return list.length?Math.max(...list.map(x=>x.order||0))+1:0}
+// Records created before drag-to-reorder existed have no `order`; sort is stable,
+// so they keep their insertion order and get numbered on first load.
+async function ensureOrder(list,store){
+  list.sort((a,b)=>(a.order==null?1e9:a.order)-(b.order==null?1e9:b.order));
+  for(let i=0;i<list.length;i++) if(list[i].order!==i){list[i].order=i;await dbPut(store,list[i])}
+  return list;
+}
+
+// Freeze the page behind a full-screen overlay: without this, a touch that misses
+// the crop frame scrolls the list underneath.
+let scrollLockY=0, scrollLocks=0;
+function lockScroll(on){
+  if(on){
+    if(scrollLocks++) return;
+    scrollLockY=window.scrollY||0;
+    const b=document.body.style;
+    b.position="fixed";b.top=(-scrollLockY)+"px";b.left="0";b.right="0";b.width="100%";
+  }else{
+    if(scrollLocks===0||--scrollLocks>0) return;
+    const b=document.body.style;
+    b.position="";b.top="";b.left="";b.right="";b.width="";
+    window.scrollTo(0,scrollLockY);
+  }
+}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function showToast(msg){const old=document.querySelector(".toast");if(old)old.remove();const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2500)}
@@ -495,7 +544,7 @@ function goHome(){
 async function openFolder(id){
   currentFolder=folders.find(f=>f.id===id);
   if(!currentFolder) return;
-  cards=await dbByIndex(S_CARDS,"folderId",id);
+  cards=await ensureOrder(await dbByIndex(S_CARDS,"folderId",id),S_CARDS);
   document.getElementById("foldersView").classList.add("hidden");
   document.getElementById("deckView").classList.remove("hidden");
   document.getElementById("quizView").classList.add("hidden");
@@ -516,7 +565,7 @@ function showDeck(){
 async function addFolder(){
   const inp=document.getElementById("folderInput"), name=inp.value.trim();
   if(!name) return;
-  const folder={id:Date.now().toString(), name, created:Date.now()};
+  const folder={id:Date.now().toString(), name, created:Date.now(), order:nextOrder(folders)};
   folders.push(folder); await dbPut(S_FOLDERS,folder);
   inp.value=""; document.getElementById("addFolderBtn").disabled=true;
   renderFolders();
@@ -580,13 +629,13 @@ async function renderFolders(){
   list.innerHTML=folders.map((f,i)=>{
     const n=countMap[f.id]||0;
     if(editingId===f.id) return `<div class="folder-item" style="animation-delay:${i*30}ms;cursor:default">
-      <div class="folder-icon">${ICONS.folder}<\/div>
+      <div class="grip">${ICONS.grip}<\/div>
       <div class="info"><div class="edit-row">
         <input id="editf-${f.id}" class="inp" value="${esc(f.name)}" onkeydown="if(event.key==='Enter')saveEditFolder('${f.id}')">
         <button onclick="saveEditFolder('${f.id}')">OK<\/button>
       <\/div><\/div><\/div>`;
-    return `<div class="folder-item" style="animation-delay:${i*30}ms" onclick="openFolder('${f.id}')">
-      <div class="folder-icon">${ICONS.folder}<\/div>
+    return `<div class="folder-item" data-id="${f.id}" style="animation-delay:${i*30}ms" onclick="openFolder('${f.id}')">
+      <div class="grip" aria-label="${t('reorder')}" onclick="event.stopPropagation()" onpointerdown="startReorder(event,'folder')">${ICONS.grip}<\/div>
       <div class="folder-info">
         <div class="folder-name">${esc(f.name)}<\/div>
         <div class="folder-count">${t("n_faces")(n)}<\/div>
@@ -659,6 +708,7 @@ function openCropper(dataUrl,onDone){
   img.src=dataUrl;
 }
 function renderCropper(){
+  lockScroll(true);
   const o=document.getElementById("cropOverlay");
   o.className="crop-overlay";
   o.innerHTML=`<div class="crop-box">
@@ -693,7 +743,7 @@ function startCropDrag(e,mode){
   e.preventDefault();
   const startX=e.clientX,startY=e.clientY;
   const startSel={...cropState.sel};
-  const MIN=32,W=cropState.dispW,H=cropState.dispH;
+  const MIN=72,W=cropState.dispW,H=cropState.dispH;
   function onMove(ev){
     const dx=ev.clientX-startX,dy=ev.clientY-startY;
     let {x,y,w,h}=startSel;
@@ -721,6 +771,7 @@ function startCropDrag(e,mode){
 function closeCropper(){
   document.getElementById("cropOverlay").className="hidden";
   cropState=null;
+  lockScroll(false);
 }
 function confirmCrop(){
   if(!cropState) return;
@@ -806,6 +857,7 @@ async function onSheetFile(e){
   const file=e.target.files&&e.target.files[0];
   e.target.value="";
   if(!file||!currentFolder) return;
+  lockScroll(true);
   const o=document.getElementById("sheetOverlay");
   o.className="sheet-overlay";
   o.innerHTML=`<div class="sheet-inner"><div class="sheet-loading">${t("sheet_loading")}<\/div><\/div>`;
@@ -818,7 +870,7 @@ async function onSheetFile(e){
       await openSheet(await fileToSheet(file),{pdfDoc:null,pages:1,page:1});
     }
   }catch(err){
-    o.className="hidden";sheet=null;
+    o.className="hidden";sheet=null;lockScroll(false);
     showToast(t("sheet_bad_file"));
   }
 }
@@ -973,7 +1025,7 @@ function bindSheetPointers(){
 function startSheetDrag(e,mode){
   e.preventDefault();
   const z=sheet.zoom,x0=e.clientX,y0=e.clientY,st={...sheet.sel};
-  const MIN=24,W=sheet.natW,H=sheet.natH;
+  const MIN=Math.round(72/z),W=sheet.natW,H=sheet.natH;
   function onMove(ev){
     const dx=(ev.clientX-x0)/z,dy=(ev.clientY-y0)/z;
     let{x,y,w,h}=st;
@@ -1022,7 +1074,7 @@ async function sheetAdd(){
   if(!firstName) return;
   const name=lastName?firstName+" "+lastName:firstName;
   const card={id:Date.now().toString()+Math.random().toString(36).slice(2,6),
-    folderId:currentFolder.id,name,firstName,lastName,photo:cropFromSheet(),score:0,attempts:0};
+    folderId:currentFolder.id,name,firstName,lastName,photo:cropFromSheet(),score:0,attempts:0,order:nextOrder(cards)};
   cards.push(card);await dbPut(S_CARDS,card);
   sheet.added.push(card);
 
@@ -1079,6 +1131,7 @@ function closeSheet(){
   document.getElementById("sheetOverlay").className="hidden";
   document.getElementById("sheetOverlay").innerHTML="";
   sheet=null;
+  lockScroll(false);
   renderDeck();
   if(n) showToast(t("sheet_added_n")(n));
 }
@@ -1096,7 +1149,7 @@ async function addCard(){
   const firstName=fnInp.value.trim(),lastName=lnInp.value.trim().toUpperCase();
   if(!firstName||!pendingPhoto) return;
   const name=lastName?firstName+" "+lastName:firstName;
-  const card={id:Date.now().toString(),folderId:currentFolder.id,name,firstName,lastName,photo:pendingPhoto,score:0,attempts:0};
+  const card={id:Date.now().toString(),folderId:currentFolder.id,name,firstName,lastName,photo:pendingPhoto,score:0,attempts:0,order:nextOrder(cards)};
   cards.push(card); await dbPut(S_CARDS,card);
   fnInp.value="";lnInp.value="";pendingPhoto=null;
   document.getElementById("preview").classList.remove("on");
@@ -1149,22 +1202,83 @@ function renderDeck(){
     const fn=c.firstName||c.name;
     const ln=c.lastName||"";
     if(editingId===c.id) return `<div class="item" style="animation-delay:${i*30}ms">
-      <img src="${c.photo}" class="thumb thumb-btn" alt="" aria-label="${t('crop_photo')}" onclick="cropCard('${c.id}')">
+      <img src="${c.photo}" class="thumb" alt="">
       <div class="info"><div class="edit-row">
         <input id="editfn-${c.id}" class="inp" value="${esc(fn)}" placeholder="${t('first_name')}" onkeydown="if(event.key==='Enter')document.getElementById('editln-${c.id}').focus()">
-        <input id="editln-${c.id}" class="inp" value="${esc(ln)}" placeholder="${t('last_name')}" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')saveEditCard('${c.id}')">
+        <input id="editln-${c.id}" class="inp" value="${esc(ln)}" placeholder="${t('last_name_short')}" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')saveEditCard('${c.id}')">
         <button onclick="saveEditCard('${c.id}')">OK<\/button>
       <\/div><\/div><\/div>`;
     const lnHtml=ln?`<div class="surname">${esc(ln)}<\/div>`:"";
     const st=c.attempts>0?`<div class="stats">${c.score}/${c.attempts} ${t("correct")}<\/div>`:"";
-    return `<div class="item" style="animation-delay:${i*30}ms">
-      <img src="${c.photo}" class="thumb thumb-btn" alt="${esc(fn)}" aria-label="${t('crop_photo')}" onclick="cropCard('${c.id}')">
+    return `<div class="item" data-id="${c.id}" style="animation-delay:${i*30}ms">
+      <div class="grip" aria-label="${t('reorder')}" onpointerdown="startReorder(event,'card')">${ICONS.grip}<\/div>
+      <img src="${c.photo}" class="thumb" alt="${esc(fn)}">
       <div class="info"><div class="name">${esc(fn)}<\/div>${lnHtml}${st}<\/div>
       <div class="actions">
+        <button class="btn-icon" aria-label="${t('crop_photo')}" onclick="cropCard('${c.id}')">${ICONS.crop}<\/button>
         <button class="btn-icon" aria-label="${t('edit')}" onclick="startEditCard('${c.id}')">${ICONS.edit}<\/button>
         <button class="btn-d" aria-label="${t('delete')}" onclick="confirmDel('${c.id}')">${ICONS.trash}<\/button>
       <\/div><\/div>`;
   }).join("");
+}
+
+// ================ Drag to reorder ================
+// Rows never move in the DOM while dragging: the grabbed row follows the finger
+// and the others slide by one slot, so nothing re-measures mid-gesture.
+let reorder=null;
+
+function startReorder(e,kind){
+  if(e.button>0) return;
+  const row=e.target.closest(kind==="card"?".item":".folder-item");
+  if(!row||!row.parentElement) return;
+  const list=row.parentElement, rows=[...list.children], i0=rows.indexOf(row);
+  if(i0<0) return;
+  e.preventDefault(); e.stopPropagation();
+  const rects=rows.map(r=>r.getBoundingClientRect());
+  reorder={kind,rows,i0,target:i0,moved:false,startY:e.clientY,
+    centers:rects.map(r=>r.top+r.height/2), step:rects[i0].height+8};
+  row.classList.add("reordering");
+  rows.forEach((r,j)=>{if(j!==i0) r.classList.add("shifting")});
+  document.addEventListener("pointermove",onReorderMove);
+  document.addEventListener("pointerup",endReorder);
+  document.addEventListener("pointercancel",endReorder);
+}
+
+function onReorderMove(ev){
+  if(!reorder) return;
+  const{rows,i0,centers,step}=reorder;
+  const dy=ev.clientY-reorder.startY;
+  if(Math.abs(dy)>3) reorder.moved=true;
+  rows[i0].style.transform="translateY("+dy+"px)";
+  // Commit against the midpoint between two slots, so half a row of travel is
+  // enough to swap — comparing against the neighbour's centre would require
+  // dragging a full row past it before anything happened.
+  const c=centers[i0]+dy;
+  let t=i0;
+  while(t>0&&c<(centers[t-1]+centers[t])/2) t--;
+  while(t<rows.length-1&&c>(centers[t]+centers[t+1])/2) t++;
+  if(t===reorder.target) return;
+  reorder.target=t;
+  rows.forEach((r,j)=>{
+    if(j===i0) return;
+    const sh=(t>i0&&j>i0&&j<=t)?-step:(t<i0&&j<i0&&j>=t)?step:0;
+    r.style.transform=sh?"translateY("+sh+"px)":"";
+  });
+}
+
+async function endReorder(){
+  document.removeEventListener("pointermove",onReorderMove);
+  document.removeEventListener("pointerup",endReorder);
+  document.removeEventListener("pointercancel",endReorder);
+  if(!reorder) return;
+  const{kind,rows,i0,target,moved}=reorder;
+  rows.forEach(r=>{r.style.transform="";r.classList.remove("reordering","shifting")});
+  reorder=null;
+  if(!moved||target===i0) return;
+  const arr=kind==="card"?cards:folders, store=kind==="card"?S_CARDS:S_FOLDERS;
+  arr.splice(target,0,arr.splice(i0,1)[0]);
+  for(let i=0;i<arr.length;i++) if(arr[i].order!==i){arr[i].order=i;await dbPut(store,arr[i])}
+  if(kind==="card") renderDeck(); else renderFolders();
 }
 
 // ================ Quiz ================
@@ -1276,7 +1390,7 @@ async function importCards(e){
     for(const c of arr){
       if(!c.id||!c.name||!c.photo) continue;
       if(cards.find(x=>x.id===c.id)) continue;
-      const card={id:c.id,folderId:currentFolder.id,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",photo:c.photo,score:c.score||0,attempts:c.attempts||0};
+      const card={id:c.id,folderId:currentFolder.id,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",photo:c.photo,score:c.score||0,attempts:c.attempts||0,order:nextOrder(cards)};
       cards.push(card);await dbPut(S_CARDS,card);count++;
     }
     renderDeck();
@@ -1294,12 +1408,12 @@ async function importFolder(e){
     if(!data.folder||!data.cards) throw new Error("Format invalide");
     // Create folder with new id to avoid conflicts
     const newId=Date.now().toString();
-    const folder={id:newId,name:data.folder.name,created:Date.now()};
+    const folder={id:newId,name:data.folder.name,created:Date.now(),order:nextOrder(folders)};
     folders.push(folder);await dbPut(S_FOLDERS,folder);
     let count=0;
     for(const c of data.cards){
       if(!c.name||!c.photo) continue;
-      const card={id:(Date.now()+count).toString(),folderId:newId,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",photo:c.photo,score:0,attempts:0};
+      const card={id:(Date.now()+count).toString(),folderId:newId,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",photo:c.photo,score:0,attempts:0,order:count};
       await dbPut(S_CARDS,card);count++;
     }
     renderFolders();
