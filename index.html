@@ -155,6 +155,21 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
   .nav button{padding:7px 12px;font-size:12px}
   .judge-yes,.judge-no{padding:14px 8px;font-size:14px}
 }
+
+/* Crop tool */
+.crop-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(37,36,31,.55);z-index:150;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease}
+.crop-box{background:#fff;border-radius:var(--r-lg);padding:20px;max-width:400px;width:100%;box-shadow:0 8px 28px rgba(37,36,31,.2)}
+.crop-stage{position:relative;margin:0 auto;background:#111;border-radius:var(--r-sm);overflow:hidden;touch-action:none}
+.crop-stage img{display:block;pointer-events:none;user-select:none;-webkit-user-select:none}
+.crop-sel{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55);cursor:move;touch-action:none}
+.crop-handle{position:absolute;width:20px;height:20px;background:#fff;border:2px solid var(--accent-deep);border-radius:50%;touch-action:none}
+.crop-handle[data-h="nw"]{left:-11px;top:-11px;cursor:nwse-resize}
+.crop-handle[data-h="ne"]{right:-11px;top:-11px;cursor:nesw-resize}
+.crop-handle[data-h="sw"]{left:-11px;bottom:-11px;cursor:nesw-resize}
+.crop-handle[data-h="se"]{right:-11px;bottom:-11px;cursor:nwse-resize}
+.crop-btns{display:flex;gap:8px;margin-top:16px}
+.crop-btns button{flex:1}
+.thumb-btn{cursor:pointer;position:relative}
 </style>
 </head>
 <body>
@@ -196,6 +211,10 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
       <button class="btn btn-s mb" onclick="document.getElementById('fileInput').click()">
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.4"/></svg>
         <span id="photoLbl" data-i18n="choose_photo">Choisir une photo</span>
+      </button>
+      <button class="btn btn-s mb hidden" id="cropTriggerBtn" onclick="cropPending()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
+        <span data-i18n="crop_photo">Rogner la photo</span>
       </button>
       <input type="text" id="firstNameInput" class="inp mb" data-i18n-placeholder="first_name" placeholder="Prénom" oninput="updAdd()" onkeydown="if(event.key==='Enter')document.getElementById('lastNameInput').focus()">
       <input type="text" id="lastNameInput" class="inp mb" data-i18n-placeholder="last_name" placeholder="NOM (facultatif)" oninput="updAdd()" onkeydown="if(event.key==='Enter')addCard()" style="text-transform:uppercase">
@@ -255,6 +274,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 </div>
 
 <div id="confirmOverlay" class="hidden"></div>
+<div id="cropOverlay" class="hidden"></div>
 
 <script>
 // ================ IndexedDB ================
@@ -303,6 +323,7 @@ const LANGS={
     back_classes:"← Classes",
     add_person:"Ajouter une personne", choose_photo:"Choisir une photo", change_photo:"Changer la photo",
     first_name:"Prénom", last_name:"NOM (facultatif)", add:"Ajouter",
+    crop_photo:"Rogner la photo", crop_apply:"Valider",
     empty_cards:"Ajoute des visages<br>pour les réviser.",
     export:"Exporter", import:"Importer",
     back_cards:"← Cartes", pick_count:"Nombre d'élèves à piocher",
@@ -331,6 +352,7 @@ const LANGS={
     back_classes:"← Classes",
     add_person:"Add a person", choose_photo:"Choose a photo", change_photo:"Change photo",
     first_name:"First name", last_name:"SURNAME (optional)", add:"Add",
+    crop_photo:"Crop photo", crop_apply:"Apply",
     empty_cards:"Add faces<br>to start reviewing.",
     export:"Export", import:"Import",
     back_cards:"← Cards", pick_count:"Number of students to pick",
@@ -541,7 +563,124 @@ function onPhoto(e){
   };
   reader.readAsDataURL(file);
 }
-function updAdd(){document.getElementById("addBtn").disabled=!(document.getElementById("firstNameInput").value.trim()&&pendingPhoto)}
+function updAdd(){
+  document.getElementById("addBtn").disabled=!(document.getElementById("firstNameInput").value.trim()&&pendingPhoto);
+  document.getElementById("cropTriggerBtn").classList.toggle("hidden",!pendingPhoto);
+}
+function cropPending(){
+  if(!pendingPhoto) return;
+  openCropper(pendingPhoto,(newData)=>{
+    pendingPhoto=newData;
+    const prev=document.getElementById("preview");
+    prev.src=newData;prev.classList.add("on");
+  });
+}
+async function cropCard(id){
+  const card=cards.find(c=>c.id===id);
+  if(!card) return;
+  openCropper(card.photo,async(newData)=>{
+    card.photo=newData;
+    await dbPut(S_CARDS,card);
+    renderDeck();
+  });
+}
+
+// ================ Crop tool ================
+let cropState=null;
+function openCropper(dataUrl,onDone){
+  const img=new Image();
+  img.onload=()=>{
+    const maxW=Math.min(360,window.innerWidth-64);
+    const maxH=Math.min(420,window.innerHeight-220);
+    const fit=Math.min(maxW/img.naturalWidth,maxH/img.naturalHeight,1);
+    const dispW=Math.round(img.naturalWidth*fit),dispH=Math.round(img.naturalHeight*fit);
+    cropState={src:dataUrl,natW:img.naturalWidth,natH:img.naturalHeight,dispW,dispH,onDone,
+      sel:{x:0,y:0,w:dispW,h:dispH},drag:null};
+    renderCropper();
+  };
+  img.src=dataUrl;
+}
+function renderCropper(){
+  const o=document.getElementById("cropOverlay");
+  o.className="crop-overlay";
+  o.innerHTML=`<div class="crop-box">
+    <div class="crop-stage" id="cropStage" style="width:${cropState.dispW}px;height:${cropState.dispH}px">
+      <img src="${cropState.src}" width="${cropState.dispW}" height="${cropState.dispH}" alt="">
+      <div class="crop-sel" id="cropSel">
+        <div class="crop-handle" data-h="nw"></div>
+        <div class="crop-handle" data-h="ne"></div>
+        <div class="crop-handle" data-h="sw"></div>
+        <div class="crop-handle" data-h="se"></div>
+      </div>
+    </div>
+    <div class="crop-btns">
+      <button class="btn btn-s" onclick="closeCropper()">${t("cancel")}<\/button>
+      <button class="btn btn-p" onclick="confirmCrop()">${t("crop_apply")}<\/button>
+    </div>
+  </div>`;
+  layoutCropSel();
+  const sel=document.getElementById("cropSel");
+  sel.addEventListener("pointerdown",e=>startCropDrag(e,"move"));
+  sel.querySelectorAll(".crop-handle").forEach(h=>{
+    h.addEventListener("pointerdown",e=>{e.stopPropagation();startCropDrag(e,h.dataset.h)});
+  });
+}
+function layoutCropSel(){
+  const sel=document.getElementById("cropSel");
+  if(!sel||!cropState) return;
+  const s=cropState.sel;
+  sel.style.left=s.x+"px";sel.style.top=s.y+"px";sel.style.width=s.w+"px";sel.style.height=s.h+"px";
+}
+function startCropDrag(e,mode){
+  e.preventDefault();
+  const startX=e.clientX,startY=e.clientY;
+  const startSel={...cropState.sel};
+  const MIN=32,W=cropState.dispW,H=cropState.dispH;
+  function onMove(ev){
+    const dx=ev.clientX-startX,dy=ev.clientY-startY;
+    let {x,y,w,h}=startSel;
+    if(mode==="move"){
+      x=Math.min(Math.max(0,startSel.x+dx),W-w);
+      y=Math.min(Math.max(0,startSel.y+dy),H-h);
+    }else{
+      let x2=startSel.x+startSel.w,y2=startSel.y+startSel.h;
+      if(mode.includes("w")){x=Math.min(Math.max(0,startSel.x+dx),x2-MIN);}
+      if(mode.includes("e")){x2=Math.max(Math.min(W,x2+dx),startSel.x+MIN);}
+      if(mode.includes("n")){y=Math.min(Math.max(0,startSel.y+dy),y2-MIN);}
+      if(mode.includes("s")){y2=Math.max(Math.min(H,y2+dy),startSel.y+MIN);}
+      w=x2-x;h=y2-y;
+    }
+    cropState.sel={x,y,w,h};
+    layoutCropSel();
+  }
+  function onUp(){
+    document.removeEventListener("pointermove",onMove);
+    document.removeEventListener("pointerup",onUp);
+  }
+  document.addEventListener("pointermove",onMove);
+  document.addEventListener("pointerup",onUp);
+}
+function closeCropper(){
+  document.getElementById("cropOverlay").className="hidden";
+  cropState=null;
+}
+function confirmCrop(){
+  if(!cropState) return;
+  const{sel,natW,natH,dispW,dispH,src,onDone}=cropState;
+  const scaleX=natW/dispW,scaleY=natH/dispH;
+  const sx=sel.x*scaleX,sy=sel.y*scaleY,sw=sel.w*scaleX,sh=sel.h*scaleY;
+  const img=new Image();
+  img.onload=()=>{
+    const max=640;let outW=sw,outH=sh;
+    if(outW>max||outH>max){if(outW>outH){outH=Math.round(outH*max/outW);outW=max}else{outW=Math.round(outW*max/outH);outH=max}}
+    const c=document.createElement("canvas");c.width=Math.round(outW);c.height=Math.round(outH);
+    c.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
+    const outData=c.toDataURL("image/jpeg",.82);
+    closeCropper();
+    onDone(outData);
+  };
+  img.src=src;
+}
 
 // ================ Cards CRUD ================
 async function addCard(){
@@ -603,7 +742,7 @@ function renderDeck(){
     const fn=c.firstName||c.name;
     const ln=c.lastName||"";
     if(editingId===c.id) return `<div class="item" style="animation-delay:${i*30}ms">
-      <img src="${c.photo}" class="thumb" alt="">
+      <img src="${c.photo}" class="thumb thumb-btn" alt="" aria-label="${t('crop_photo')}" onclick="cropCard('${c.id}')">
       <div class="info"><div class="edit-row">
         <input id="editfn-${c.id}" class="inp" value="${esc(fn)}" placeholder="${t('first_name')}" onkeydown="if(event.key==='Enter')document.getElementById('editln-${c.id}').focus()">
         <input id="editln-${c.id}" class="inp" value="${esc(ln)}" placeholder="${t('last_name')}" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')saveEditCard('${c.id}')">
@@ -612,7 +751,7 @@ function renderDeck(){
     const lnHtml=ln?`<div class="surname">${esc(ln)}<\/div>`:"";
     const st=c.attempts>0?`<div class="stats">${c.score}/${c.attempts} ${t("correct")}<\/div>`:"";
     return `<div class="item" style="animation-delay:${i*30}ms">
-      <img src="${c.photo}" class="thumb" alt="${esc(fn)}">
+      <img src="${c.photo}" class="thumb thumb-btn" alt="${esc(fn)}" aria-label="${t('crop_photo')}" onclick="cropCard('${c.id}')">
       <div class="info"><div class="name">${esc(fn)}<\/div>${lnHtml}${st}<\/div>
       <div class="actions">
         <button class="btn-icon" aria-label="${t('edit')}" onclick="startEditCard('${c.id}')">${ICONS.edit}<\/button>
