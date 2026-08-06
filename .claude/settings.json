@@ -7,6 +7,11 @@
             "type": "command",
             "command": "git pull --ff-only 2>/dev/null || true",
             "statusMessage": "Synchronisation avec GitHub..."
+          },
+          {
+            "type": "command",
+            "command": "if ! lsof -iTCP:8080 -sTCP:LISTEN -n -P >/dev/null 2>&1; then (nohup npx --yes live-server --host=0.0.0.0 --port=8080 --no-browser \"${CLAUDE_PROJECT_DIR:-.}\" > /tmp/visages-live-server.log 2>&1 & disown); sleep 2; fi; IP=$(ipconfig getifaddr en0 2>/dev/null); if [ -z \"$IP\" ]; then IP=\"IP indisponible\"; fi; echo \"{\\\"systemMessage\\\": \\\"Serveur de test iPhone : http://$IP:8080\\\"}\"",
+            "statusMessage": "Demarrage du serveur de test..."
           }
         ]
       }
