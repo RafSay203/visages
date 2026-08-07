@@ -159,7 +159,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
   .item,.folder-item{gap:8px}
   .item{padding:10px 10px}
   .thumb{width:44px;height:44px}
-  .item .grip,.folder-item .grip{width:18px}
+  .item .grip,.folder-item .grip{width:24px}
   .actions .btn-icon,.actions .btn-d,.folder-actions .btn-icon,.folder-actions .btn-d{padding:4px 4px}
   .actions,.folder-actions{gap:3px}
 }
@@ -187,7 +187,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .crop-btns button{flex:1}
 
 /* Drag-to-reorder */
-.grip{flex-shrink:0;width:22px;align-self:stretch;display:flex;align-items:center;justify-content:center;color:var(--text-light);cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.grip{flex-shrink:0;width:28px;align-self:stretch;display:flex;align-items:center;justify-content:center;color:var(--text-light);cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
 .grip:active{cursor:grabbing;color:var(--accent-deep)}
 .reordering{position:relative;z-index:3;box-shadow:0 8px 22px rgba(0,0,0,.6);opacity:.96;cursor:grabbing}
 .reordering,.shifting{animation:none !important}
@@ -268,11 +268,11 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
       <img id="preview" class="preview" alt="aperçu">
       <input type="file" id="fileInput" accept="image/*" onchange="onPhoto(event)" style="display:none">
       <button class="btn btn-s mb" onclick="document.getElementById('fileInput').click()">
-        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.4"/></svg>
+        <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.4"/></svg>
         <span id="photoLbl" data-i18n="choose_photo">Choisir une photo</span>
       </button>
       <button class="btn btn-s mb hidden" id="cropTriggerBtn" onclick="cropPending()">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
         <span data-i18n="crop_photo">Rogner la photo</span>
       </button>
       <input type="text" id="firstNameInput" class="inp mb" data-i18n-placeholder="first_name" placeholder="Prénom" oninput="updAdd()" onkeydown="if(event.key==='Enter')document.getElementById('lastNameInput').focus()">
@@ -280,7 +280,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
       <button class="btn btn-p" id="addBtn" onclick="addCard()" disabled data-i18n="add">Ajouter</button>
     </div>
     <button class="btn btn-s mb" style="margin-bottom:24px" onclick="document.getElementById('sheetInput').click()">
-      <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><circle cx="15.5" cy="9.5" r="1.8"/><circle cx="8.5" cy="16" r="1.8"/><circle cx="15.5" cy="16" r="1.8"/></svg>
+      <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="5.25" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="9.75" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="14.25" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="18.75" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="5.25" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="9.75" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="14.25" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="18.75" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="5.25" cy="17.33" r="1.25" fill="currentColor" stroke="none"/><circle cx="9.75" cy="17.33" r="1.25" fill="currentColor" stroke="none"/><circle cx="14.25" cy="17.33" r="1.25" fill="currentColor" stroke="none"/><circle cx="18.75" cy="17.33" r="1.25" fill="currentColor" stroke="none"/></svg>
       <span data-i18n="sheet_import">Importer un trombinoscope</span>
     </button>
     <input type="file" id="sheetInput" accept="image/*,application/pdf,.pdf" onchange="onSheetFile(event)" style="display:none">
@@ -370,8 +370,8 @@ function dbByIndex(store,idx,val){return new Promise((res,rej)=>{const r=db.tran
 const ICONS={
   edit:'<svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="M14.5 7.5l2 2"/></svg>',
   trash:'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/></svg>',
-  crop:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>',
-  grip:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 8h14"/><path d="M5 12h14"/><path d="M5 16h14"/></svg>'
+  crop:'<svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>',
+  grip:'<svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 8h14"/><path d="M5 12h14"/><path d="M5 16h14"/></svg>'
 };
 
 // ================ State ================
