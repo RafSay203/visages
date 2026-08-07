@@ -253,7 +253,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
     </div>
     <div class="section-lbl" id="foldersCount"></div>
     <div class="folder-list" id="folderList"></div>
-    <div class="empty hidden" id="foldersEmpty"><span class="empty-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z"/></svg></span><span data-i18n="empty_folders">Crée une classe pour commencer<br>à ajouter des visages.</span></div>
+    <div class="empty hidden" id="foldersEmpty"><span class="empty-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z"/></svg></span><span data-i18n="empty_folders">Crée une classe pour commencer<br>à ajouter des élèves.</span></div>
     <div class="io-bar hidden" id="ioBarGlobal">
       <button class="btn btn-s" onclick="document.getElementById('importGlobalInput').click()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span data-i18n="import_class">Importer une classe (.json)</span></button>
       <input type="file" id="importGlobalInput" accept=".json" onchange="importFolder(event)" style="display:none">
@@ -286,7 +286,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
     <input type="file" id="sheetInput" accept="image/*,application/pdf,.pdf" onchange="onSheetFile(event)" style="display:none">
     <div class="section-lbl hidden" id="countLbl"></div>
     <div class="list" id="cardList"></div>
-    <div class="empty hidden" id="emptyMsg"><span class="empty-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.6"/><path d="M5 20c0-3.6 3.1-6.4 7-6.4s7 2.8 7 6.4"/></svg></span><span data-i18n="empty_cards">Ajoute des visages<br>pour les réviser.</span></div>
+    <div class="empty hidden" id="emptyMsg"><span class="empty-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.6"/><path d="M5 20c0-3.6 3.1-6.4 7-6.4s7 2.8 7 6.4"/></svg></span><span data-i18n="empty_cards">Ajoute des élèves<br>pour les réviser.</span></div>
     <div class="io-bar hidden" id="ioBar">
       <button class="btn btn-s" onclick="exportFolder()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4"/><path d="M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span data-i18n="export">Exporter</span></button>
       <button class="btn btn-s" onclick="document.getElementById('importInput').click()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span data-i18n="import">Importer</span></button>
@@ -384,7 +384,7 @@ const LANGS={
   fr:{
     nav_cards:"Élèves", nav_quiz:"Quiz",
     new_class:"Nouvelle classe", class_placeholder:"Ex : L1 Maths 2026", create:"Créer",
-    empty_folders:"Crée une classe pour commencer<br>à ajouter des visages.",
+    empty_folders:"Crée une classe pour commencer<br>à ajouter des élèves.",
     import_class:"Importer une classe (.json)",
     back_classes:"← Classes",
     add_person:"Ajouter un.e élève", choose_photo:"Choisir une photo", change_photo:"Changer la photo",
@@ -393,14 +393,14 @@ const LANGS={
     last_name_short:"NOM",
     sheet_import:"Importer un trombinoscope",
     sheet_title:"Trombinoscope",
-    sheet_hint:"Touche un visage pour y placer le cadre, ajuste-le avec les coins, puis saisis le nom.",
+    sheet_hint:"Touche le visage d'un.e élève pour y placer le cadre, ajuste-le avec les coins, puis saisis le nom.",
     sheet_add:"Ajouter cet élève",
     sheet_done:"Terminer",
     sheet_loading:"Lecture du fichier…",
     sheet_page:"Page",
     sheet_added_n:n=>n+" élève"+(n!==1?"s":"")+" ajouté"+(n!==1?"s":""),
     sheet_bad_file:"✗ Fichier illisible (JPG, PNG ou PDF attendu)",
-    empty_cards:"Ajoute des visages<br>pour les réviser.",
+    empty_cards:"Ajoute des élèves<br>pour les réviser.",
     export:"Exporter", import:"Importer",
     back_cards:"← Classe", pick_count:"Nombre d'élèves à piocher",
     all_class:"Toute la classe", back_return:"← Retour",
@@ -408,7 +408,7 @@ const LANGS={
     didnt_know:"Je ne savais pas", knew_it:"Je savais",
     new_quiz:"Nouveau quiz", back_to_cards:"← Retour à la classe",
     n_classes:n=>n+" classe"+(n!==1?"s":""),
-    n_faces:n=>n+" visage"+(n!==1?"s":""),
+    n_faces:n=>n+" élève"+(n!==1?"s":""),
     n_cards:n=>n+" élève"+(n!==1?"s":""),
     correct:"correct",
     confirm_del_card:"Supprimer cet.te élève ?",
@@ -423,7 +423,7 @@ const LANGS={
   en:{
     nav_cards:"Students", nav_quiz:"Quiz",
     new_class:"New class", class_placeholder:"E.g. : Year 10 Maths 2026", create:"Create",
-    empty_folders:"Create a class to start<br>adding faces.",
+    empty_folders:"Create a class to start<br>adding students.",
     import_class:"Import a class (.json)",
     back_classes:"← Classes",
     add_person:"Add a student", choose_photo:"Choose a photo", change_photo:"Change photo",
@@ -432,14 +432,14 @@ const LANGS={
     last_name_short:"SURNAME",
     sheet_import:"Import a class photo sheet",
     sheet_title:"Class photo sheet",
-    sheet_hint:"Tap a face to place the frame on it, adjust it with the corners, then type the name.",
+    sheet_hint:"Tap a student's face to place the frame on it, adjust it with the corners, then type the name.",
     sheet_add:"Add this student",
     sheet_done:"Done",
     sheet_loading:"Reading file…",
     sheet_page:"Page",
     sheet_added_n:n=>n+" student"+(n!==1?"s":"")+" added",
     sheet_bad_file:"✗ Unreadable file (JPG, PNG or PDF expected)",
-    empty_cards:"Add faces<br>to start reviewing.",
+    empty_cards:"Add students<br>to start reviewing.",
     export:"Export", import:"Import",
     back_cards:"← Class", pick_count:"Number of students to pick",
     all_class:"Whole class", back_return:"← Back",
@@ -447,7 +447,7 @@ const LANGS={
     didnt_know:"Didn't know", knew_it:"I knew it",
     new_quiz:"New quiz", back_to_cards:"← Back to class",
     n_classes:n=>n+" class"+(n!==1?"es":""),
-    n_faces:n=>n+" face"+(n!==1?"s":""),
+    n_faces:n=>n+" student"+(n!==1?"s":""),
     n_cards:n=>n+" student"+(n!==1?"s":""),
     correct:"correct",
     confirm_del_card:"Delete this student?",
