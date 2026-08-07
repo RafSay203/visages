@@ -46,8 +46,8 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .btn-p:not(:disabled):active{transform:scale(.97)}
 .btn-s{background:var(--accent-light);color:var(--accent-deep)}
 .btn-s:active{transform:scale(.97)}
-.btn-d{display:inline-flex;align-items:center;justify-content:center;padding:8px 9px;border-radius:var(--r-sm);border:1.5px solid var(--red-light);cursor:pointer;background:var(--red-light);color:var(--red);font-family:var(--font-b)}
-.btn-icon{display:inline-flex;align-items:center;justify-content:center;padding:8px 9px;border-radius:var(--r-sm);border:1.5px solid var(--accent-light);cursor:pointer;background:var(--accent-light);color:var(--accent-deep)}
+.btn-d{display:inline-flex;align-items:center;justify-content:center;padding:5px 6px;border-radius:var(--r-sm);border:1.5px solid var(--red-light);cursor:pointer;background:var(--red-light);color:var(--red);font-family:var(--font-b)}
+.btn-icon{display:inline-flex;align-items:center;justify-content:center;padding:5px 6px;border-radius:var(--r-sm);border:1.5px solid var(--accent-light);cursor:pointer;background:var(--accent-light);color:var(--accent-deep)}
 .btn-icon:active,.btn-d:active{transform:scale(.95)}
 
 /* Inputs */
@@ -160,7 +160,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
   .item{padding:10px 10px}
   .thumb{width:44px;height:44px}
   .item .grip,.folder-item .grip{width:18px}
-  .actions .btn-icon,.actions .btn-d,.folder-actions .btn-icon,.folder-actions .btn-d{padding:7px 6px}
+  .actions .btn-icon,.actions .btn-d,.folder-actions .btn-icon,.folder-actions .btn-d{padding:4px 4px}
   .actions,.folder-actions{gap:3px}
 }
 
@@ -182,7 +182,8 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .crop-handle[data-h="ne"]::after{right:0;top:0;border-left:0;border-bottom:0}
 .crop-handle[data-h="sw"]::after{left:0;bottom:0;border-right:0;border-top:0}
 .crop-handle[data-h="se"]::after{right:0;bottom:0;border-left:0;border-top:0}
-.crop-btns{display:flex;gap:8px;margin-top:16px}
+.crop-reset{display:block;margin:12px auto 0;background:none;border:0;padding:6px 10px;color:var(--accent);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.crop-btns{display:flex;gap:8px;margin-top:8px}
 .crop-btns button{flex:1}
 
 /* Drag-to-reorder */
@@ -237,7 +238,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
     <div class="header-right">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
       <div class="nav" id="navBar">
-        <button id="navDeck" class="active" onclick="showDeck()" data-i18n="nav_cards">Cartes</button>
+        <button id="navDeck" class="active" onclick="showDeck()" data-i18n="nav_cards">Élèves</button>
         <button id="navQuiz" onclick="startQuiz()" data-i18n="nav_quiz">Quiz</button>
       </div>
     </div>
@@ -279,7 +280,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
       <button class="btn btn-p" id="addBtn" onclick="addCard()" disabled data-i18n="add">Ajouter</button>
     </div>
     <button class="btn btn-s mb" style="margin-bottom:24px" onclick="document.getElementById('sheetInput').click()">
-      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><circle cx="15.5" cy="9.5" r="1.8"/><circle cx="8.5" cy="16" r="1.8"/><circle cx="15.5" cy="16" r="1.8"/></svg>
+      <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><circle cx="15.5" cy="9.5" r="1.8"/><circle cx="8.5" cy="16" r="1.8"/><circle cx="15.5" cy="16" r="1.8"/></svg>
       <span data-i18n="sheet_import">Importer un trombinoscope</span>
     </button>
     <input type="file" id="sheetInput" accept="image/*,application/pdf,.pdf" onchange="onSheetFile(event)" style="display:none">
@@ -297,7 +298,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
   <div id="quizView" class="hidden">
     <!-- Setup screen -->
     <div id="quizSetup">
-      <button class="back-btn" onclick="showDeck()" data-i18n="back_cards">← Cartes</button>
+      <button class="back-btn" onclick="showDeck()" data-i18n="back_cards">← Classe</button>
       <div class="setup-box">
         <div class="lbl" data-i18n="pick_count">Nombre d'élèves à piocher</div>
         <div class="setup-options" id="setupOptions"></div>
@@ -330,7 +331,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
       <div class="fin-n" id="finN"></div>
       <div class="fin-b">
         <button class="btn btn-p" onclick="showSetup()" data-i18n="new_quiz">Nouveau quiz</button>
-        <button class="btn btn-s" onclick="showDeck()" data-i18n="back_to_cards">← Retour aux cartes</button>
+        <button class="btn btn-s" onclick="showDeck()" data-i18n="back_to_cards">← Retour à la classe</button>
       </div>
     </div>
   </div>
@@ -367,28 +368,28 @@ function dbByIndex(store,idx,val){return new Promise((res,rej)=>{const r=db.tran
 
 // ================ Icons ================
 const ICONS={
-  edit:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="M14.5 7.5l2 2"/></svg>',
-  trash:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="M14.5 7.5l2 2"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/></svg>',
   crop:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>',
   grip:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 8h14"/><path d="M5 12h14"/><path d="M5 16h14"/></svg>'
 };
 
 // ================ State ================
 let folders=[], cards=[], currentFolder=null;
-let pendingPhoto=null, editingId=null;
+let pendingPhoto=null, pendingSrc=null, pendingCrop=null, editingId=null;
 let quizCards=[], quizIdx=0, flipped=false, score={ok:0,total:0};
 
 // ================ i18n ================
 const LANGS={
   fr:{
-    nav_cards:"Cartes", nav_quiz:"Quiz",
+    nav_cards:"Élèves", nav_quiz:"Quiz",
     new_class:"Nouvelle classe", class_placeholder:"Ex : L1 Maths 2026", create:"Créer",
     empty_folders:"Crée une classe pour commencer<br>à ajouter des visages.",
     import_class:"Importer une classe (.json)",
     back_classes:"← Classes",
     add_person:"Ajouter un.e élève", choose_photo:"Choisir une photo", change_photo:"Changer la photo",
     first_name:"Prénom", last_name:"NOM (facultatif)", add:"Ajouter",
-    crop_photo:"Rogner la photo", crop_apply:"Valider",
+    crop_photo:"Rogner la photo", crop_apply:"Valider", crop_full:"Photo entière",
     last_name_short:"NOM",
     sheet_import:"Importer un trombinoscope",
     sheet_title:"Trombinoscope",
@@ -408,26 +409,26 @@ const LANGS={
     new_quiz:"Nouveau quiz", back_to_cards:"← Retour à la classe",
     n_classes:n=>n+" classe"+(n!==1?"s":""),
     n_faces:n=>n+" visage"+(n!==1?"s":""),
-    n_cards:n=>n+" carte"+(n!==1?"s":""),
+    n_cards:n=>n+" élève"+(n!==1?"s":""),
     correct:"correct",
-    confirm_del_card:"Supprimer cette carte ?",
-    confirm_del_folder:(name)=>"Supprimer « "+name+" » et toutes ses cartes ?",
+    confirm_del_card:"Supprimer cet.te élève ?",
+    confirm_del_folder:(name)=>"Supprimer « "+name+" » et tous ses élèves ?",
     cancel:"Annuler", delete:"Supprimer", edit:"Modifier", reorder:"Réorganiser",
-    min_cards:"Il faut au moins 2 cartes",
+    min_cards:"Il faut au moins 2 élèves",
     export_done:"✓ Export téléchargé",
-    import_done:(n)=>"✓ "+n+" carte"+(n!==1?"s":"")+" importée"+(n!==1?"s":""),
-    import_folder_done:(name,n)=>"✓ « "+name+" » importé ("+n+" carte"+(n!==1?"s":"")+")",
+    import_done:(n)=>"✓ "+n+" élève"+(n!==1?"s":"")+" importé"+(n!==1?"s":""),
+    import_folder_done:(name,n)=>"✓ « "+name+" » importé ("+n+" élève"+(n!==1?"s":"")+")",
     invalid_file:"✗ Fichier invalide"
   },
   en:{
-    nav_cards:"Cards", nav_quiz:"Quiz",
+    nav_cards:"Students", nav_quiz:"Quiz",
     new_class:"New class", class_placeholder:"E.g. : Year 10 Maths 2026", create:"Create",
     empty_folders:"Create a class to start<br>adding faces.",
     import_class:"Import a class (.json)",
     back_classes:"← Classes",
     add_person:"Add a student", choose_photo:"Choose a photo", change_photo:"Change photo",
     first_name:"First name", last_name:"SURNAME (optional)", add:"Add",
-    crop_photo:"Crop photo", crop_apply:"Apply",
+    crop_photo:"Crop photo", crop_apply:"Apply", crop_full:"Whole photo",
     last_name_short:"SURNAME",
     sheet_import:"Import a class photo sheet",
     sheet_title:"Class photo sheet",
@@ -447,15 +448,15 @@ const LANGS={
     new_quiz:"New quiz", back_to_cards:"← Back to class",
     n_classes:n=>n+" class"+(n!==1?"es":""),
     n_faces:n=>n+" face"+(n!==1?"s":""),
-    n_cards:n=>n+" card"+(n!==1?"s":""),
+    n_cards:n=>n+" student"+(n!==1?"s":""),
     correct:"correct",
-    confirm_del_card:"Delete this card?",
-    confirm_del_folder:(name)=>"Delete \""+name+"\" and all its cards?",
+    confirm_del_card:"Delete this student?",
+    confirm_del_folder:(name)=>"Delete \""+name+"\" and all its students?",
     cancel:"Cancel", delete:"Delete", edit:"Edit", reorder:"Reorder",
-    min_cards:"You need at least 2 cards",
+    min_cards:"You need at least 2 students",
     export_done:"✓ Export downloaded",
-    import_done:(n)=>"✓ "+n+" card"+(n!==1?"s":"")+" imported",
-    import_folder_done:(name,n)=>"✓ \""+name+"\" imported ("+n+" card"+(n!==1?"s":"")+")",
+    import_done:(n)=>"✓ "+n+" student"+(n!==1?"s":"")+" imported",
+    import_folder_done:(name,n)=>"✓ \""+name+"\" imported ("+n+" student"+(n!==1?"s":"")+")",
     invalid_file:"✗ Invalid file"
   }
 };
@@ -652,44 +653,72 @@ async function renderFolders(){
 }
 
 // ================ Photo ================
-function onPhoto(e){
+// Cropping is never destructive: a record keeps the original image in `src` and a
+// `crop` rectangle in 0..1 units of it. `photo` is only the rendered result, kept
+// so every display site (thumbnails, quiz, export) stays a plain <img src>.
+// Normalised units mean the rectangle survives any later re-encode or resize.
+const SRC_MAX=1024;    // longest side kept for the original
+const PHOTO_MAX=640;   // longest side of the rendered crop
+
+// Draw a region of `img` into a JPEG data URL, downscaled to fit `max`.
+function drawCrop(img,sx,sy,sw,sh,max,q){
+  let w=sw,h=sh;
+  if(w>max||h>max){if(w>h){h=h*max/w;w=max}else{w=w*max/h;h=max}}
+  const c=document.createElement("canvas");
+  c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));
+  c.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
+  return c.toDataURL("image/jpeg",q||.82);
+}
+function cropRect(img,crop){
+  const c=crop||{x:0,y:0,w:1,h:1},W=img.naturalWidth,H=img.naturalHeight;
+  return[c.x*W,c.y*H,Math.max(1,c.w*W),Math.max(1,c.h*H)];
+}
+async function renderCropView(srcData,crop){
+  const img=await loadImg(srcData);
+  return drawCrop(img,...cropRect(img,crop),PHOTO_MAX,.82);
+}
+// Records made before cropping became reversible only have `photo`; it becomes
+// their original. Nothing already discarded can be recovered, but from now on
+// every crop of them is undoable.
+function cardSrc(card){return card.src||card.photo}
+
+async function onPhoto(e){
   const file=e.target.files&&e.target.files[0];
   if(!file) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const img=new Image();
-    img.onload=()=>{
-      const max=640;let w=img.width,h=img.height;
-      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max}else{w=Math.round(w*max/h);h=max}}
-      const c=document.createElement("canvas");c.width=w;c.height=h;
-      c.getContext("2d").drawImage(img,0,0,w,h);
-      pendingPhoto=c.toDataURL("image/jpeg",.75);
-      const prev=document.getElementById("preview");
-      prev.src=pendingPhoto;prev.classList.add("on");
-      document.getElementById("photoLbl").textContent=t("change_photo");
-      updAdd();
-    };
-    img.src=ev.target.result;
-  };
-  reader.readAsDataURL(file);
+  try{
+    const dataUrl=await new Promise((res,rej)=>{
+      const r=new FileReader();r.onload=ev=>res(ev.target.result);r.onerror=rej;r.readAsDataURL(file);
+    });
+    const img=await loadImg(dataUrl);
+    pendingSrc=drawCrop(img,0,0,img.naturalWidth,img.naturalHeight,SRC_MAX,.85);
+    pendingCrop=null;
+    pendingPhoto=drawCrop(img,0,0,img.naturalWidth,img.naturalHeight,PHOTO_MAX,.82);
+    const prev=document.getElementById("preview");
+    prev.src=pendingPhoto;prev.classList.add("on");
+    document.getElementById("photoLbl").textContent=t("change_photo");
+    updAdd();
+  }catch(err){showToast(t("invalid_file"))}
 }
 function updAdd(){
   document.getElementById("addBtn").disabled=!(document.getElementById("firstNameInput").value.trim()&&pendingPhoto);
   document.getElementById("cropTriggerBtn").classList.toggle("hidden",!pendingPhoto);
 }
 function cropPending(){
-  if(!pendingPhoto) return;
-  openCropper(pendingPhoto,(newData)=>{
-    pendingPhoto=newData;
+  if(!pendingSrc) return;
+  openCropper(pendingSrc,pendingCrop,async(crop)=>{
+    pendingCrop=crop;
+    pendingPhoto=await renderCropView(pendingSrc,crop);
     const prev=document.getElementById("preview");
-    prev.src=newData;prev.classList.add("on");
+    prev.src=pendingPhoto;prev.classList.add("on");
   });
 }
 async function cropCard(id){
   const card=cards.find(c=>c.id===id);
   if(!card) return;
-  openCropper(card.photo,async(newData)=>{
-    card.photo=newData;
+  const src=cardSrc(card);
+  openCropper(src,card.crop,async(crop)=>{
+    card.src=src;card.crop=crop;
+    card.photo=await renderCropView(src,crop);
     await dbPut(S_CARDS,card);
     renderDeck();
   });
@@ -697,18 +726,26 @@ async function cropCard(id){
 
 // ================ Crop tool ================
 let cropState=null;
-function openCropper(dataUrl,onDone){
+// The whole original is shown, with the current crop as the starting frame — so
+// dragging a handle outwards takes back a part of the photo that was cropped out.
+function openCropper(dataUrl,crop,onDone){
   const img=new Image();
   img.onload=()=>{
     const maxW=Math.min(360,window.innerWidth-64);
     const maxH=Math.min(420,window.innerHeight-220);
     const fit=Math.min(maxW/img.naturalWidth,maxH/img.naturalHeight,1);
     const dispW=Math.round(img.naturalWidth*fit),dispH=Math.round(img.naturalHeight*fit);
+    const c=crop||{x:0,y:0,w:1,h:1};
     cropState={src:dataUrl,natW:img.naturalWidth,natH:img.naturalHeight,dispW,dispH,onDone,
-      sel:{x:0,y:0,w:dispW,h:dispH},drag:null};
+      sel:{x:c.x*dispW,y:c.y*dispH,w:c.w*dispW,h:c.h*dispH},drag:null};
     renderCropper();
   };
   img.src=dataUrl;
+}
+function resetCrop(){
+  if(!cropState) return;
+  cropState.sel={x:0,y:0,w:cropState.dispW,h:cropState.dispH};
+  layoutCropSel();
 }
 function renderCropper(){
   lockScroll(true);
@@ -724,6 +761,7 @@ function renderCropper(){
         <div class="crop-handle" data-h="se"></div>
       </div>
     </div>
+    <button class="crop-reset" onclick="resetCrop()">${t("crop_full")}<\/button>
     <div class="crop-btns">
       <button class="btn btn-s" onclick="closeCropper()">${t("cancel")}<\/button>
       <button class="btn btn-p" onclick="confirmCrop()">${t("crop_apply")}<\/button>
@@ -778,20 +816,11 @@ function closeCropper(){
 }
 function confirmCrop(){
   if(!cropState) return;
-  const{sel,natW,natH,dispW,dispH,src,onDone}=cropState;
-  const scaleX=natW/dispW,scaleY=natH/dispH;
-  const sx=sel.x*scaleX,sy=sel.y*scaleY,sw=sel.w*scaleX,sh=sel.h*scaleY;
-  const img=new Image();
-  img.onload=()=>{
-    const max=640;let outW=sw,outH=sh;
-    if(outW>max||outH>max){if(outW>outH){outH=Math.round(outH*max/outW);outW=max}else{outW=Math.round(outW*max/outH);outH=max}}
-    const c=document.createElement("canvas");c.width=Math.round(outW);c.height=Math.round(outH);
-    c.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
-    const outData=c.toDataURL("image/jpeg",.82);
-    closeCropper();
-    onDone(outData);
-  };
-  img.src=src;
+  const{sel,dispW,dispH,onDone}=cropState;
+  const cl=(v)=>Math.min(1,Math.max(0,v));
+  const crop={x:cl(sel.x/dispW),y:cl(sel.y/dispH),w:cl(sel.w/dispW),h:cl(sel.h/dispH)};
+  closeCropper();
+  onDone(crop);
 }
 
 // ================ Trombinoscope import ================
@@ -1061,13 +1090,22 @@ function updSheetAdd(){
   if(btn) btn.disabled=!document.getElementById("sheetFn").value.trim();
 }
 
+// Keeping the whole sheet once per student would be absurd, and keeping only the
+// frame would make re-cropping pointless — so the stored original is the frame
+// plus a margin of its own size on each side, which is what "dérogner" can take
+// back. The rendered photo is drawn from the sheet itself, not from that copy,
+// to avoid a second JPEG generation.
+const SHEET_SRC_MARGIN=.75;
 function cropFromSheet(){
-  const{sel,img}=sheet;
-  const max=640;let w=sel.w,h=sel.h;
-  if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max}else{w=Math.round(w*max/h);h=max}}
-  const c=document.createElement("canvas");c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));
-  c.getContext("2d").drawImage(img,sel.x,sel.y,sel.w,sel.h,0,0,c.width,c.height);
-  return c.toDataURL("image/jpeg",.82);
+  const{sel,img,natW,natH}=sheet;
+  const mx=sel.w*SHEET_SRC_MARGIN,my=sel.h*SHEET_SRC_MARGIN;
+  const x=Math.max(0,sel.x-mx),y=Math.max(0,sel.y-my);
+  const w=Math.min(natW,sel.x+sel.w+mx)-x,h=Math.min(natH,sel.y+sel.h+my)-y;
+  return{
+    photo:drawCrop(img,sel.x,sel.y,sel.w,sel.h,PHOTO_MAX,.82),
+    src:drawCrop(img,x,y,w,h,SRC_MAX,.85),
+    crop:{x:(sel.x-x)/w,y:(sel.y-y)/h,w:sel.w/w,h:sel.h/h}
+  };
 }
 
 async function sheetAdd(){
@@ -1077,7 +1115,7 @@ async function sheetAdd(){
   if(!firstName) return;
   const name=lastName?firstName+" "+lastName:firstName;
   const card={id:Date.now().toString()+Math.random().toString(36).slice(2,6),
-    folderId:currentFolder.id,name,firstName,lastName,photo:cropFromSheet(),score:0,attempts:0,order:nextOrder(cards)};
+    folderId:currentFolder.id,name,firstName,lastName,...cropFromSheet(),score:0,attempts:0,order:nextOrder(cards)};
   cards.push(card);await dbPut(S_CARDS,card);
   sheet.added.push(card);
 
@@ -1152,9 +1190,10 @@ async function addCard(){
   const firstName=fnInp.value.trim(),lastName=lnInp.value.trim().toUpperCase();
   if(!firstName||!pendingPhoto) return;
   const name=lastName?firstName+" "+lastName:firstName;
-  const card={id:Date.now().toString(),folderId:currentFolder.id,name,firstName,lastName,photo:pendingPhoto,score:0,attempts:0,order:nextOrder(cards)};
+  const card={id:Date.now().toString(),folderId:currentFolder.id,name,firstName,lastName,
+    photo:pendingPhoto,src:pendingSrc,crop:pendingCrop,score:0,attempts:0,order:nextOrder(cards)};
   cards.push(card); await dbPut(S_CARDS,card);
-  fnInp.value="";lnInp.value="";pendingPhoto=null;
+  fnInp.value="";lnInp.value="";pendingPhoto=null;pendingSrc=null;pendingCrop=null;
   document.getElementById("preview").classList.remove("on");
   document.getElementById("photoLbl").textContent=t("choose_photo");
   document.getElementById("fileInput").value="";
@@ -1389,11 +1428,17 @@ async function importCards(e){
     const data=JSON.parse(text);
     // Support both old format (array) and new format ({folder, cards})
     const arr=Array.isArray(data)?data:(data.cards||[]);
+    // An id already used by another class must not be reused: writing it would
+    // move that record here instead of copying it, emptying the other class.
+    const taken=new Set((await dbAll(S_CARDS)).map(x=>x.id));
     let count=0;
     for(const c of arr){
       if(!c.id||!c.name||!c.photo) continue;
       if(cards.find(x=>x.id===c.id)) continue;
-      const card={id:c.id,folderId:currentFolder.id,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",photo:c.photo,score:c.score||0,attempts:c.attempts||0,order:nextOrder(cards)};
+      const id=taken.has(c.id)?Date.now().toString()+Math.random().toString(36).slice(2,6):c.id;
+      taken.add(id);
+      const card={id,folderId:currentFolder.id,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",
+        photo:c.photo,src:c.src||null,crop:c.crop||null,score:c.score||0,attempts:c.attempts||0,order:nextOrder(cards)};
       cards.push(card);await dbPut(S_CARDS,card);count++;
     }
     renderDeck();
@@ -1416,7 +1461,8 @@ async function importFolder(e){
     let count=0;
     for(const c of data.cards){
       if(!c.name||!c.photo) continue;
-      const card={id:(Date.now()+count).toString(),folderId:newId,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",photo:c.photo,score:0,attempts:0,order:count};
+      const card={id:(Date.now()+count).toString(),folderId:newId,name:c.name,firstName:c.firstName||c.name,lastName:c.lastName||"",
+        photo:c.photo,src:c.src||null,crop:c.crop||null,score:0,attempts:0,order:count};
       await dbPut(S_CARDS,card);count++;
     }
     renderFolders();
