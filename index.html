@@ -90,7 +90,6 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .edit-row button{padding:7px 14px;border-radius:10px;border:none;background:var(--accent);color:#000;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b)}
 
 .empty{text-align:center;padding:50px 20px;color:var(--text-light);font-size:14px;line-height:1.7}
-.empty .empty-icon{width:56px;height:56px;border-radius:50%;background:var(--accent-light);color:var(--accent-deep);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
 
 /* Back button */
 .back-btn{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;background:none;border:none;font-family:var(--font-b);padding:0;margin-bottom:16px}
@@ -253,7 +252,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
     </div>
     <div class="section-lbl" id="foldersCount"></div>
     <div class="folder-list" id="folderList"></div>
-    <div class="empty hidden" id="foldersEmpty"><span class="empty-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z"/></svg></span><span data-i18n="empty_folders">Crée une classe pour commencer<br>à ajouter des élèves.</span></div>
+    <div class="empty hidden" id="foldersEmpty"><span data-i18n="empty_folders">Crée une classe pour commencer<br>à ajouter des élèves.</span></div>
     <div class="io-bar hidden" id="ioBarGlobal">
       <button class="btn btn-s" onclick="document.getElementById('importGlobalInput').click()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span data-i18n="import_class">Importer une classe (.json)</span></button>
       <input type="file" id="importGlobalInput" accept=".json" onchange="importFolder(event)" style="display:none">
@@ -280,13 +279,11 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
       <button class="btn btn-p" id="addBtn" onclick="addCard()" disabled data-i18n="add">Ajouter</button>
     </div>
     <button class="btn btn-s mb" style="margin-bottom:24px" onclick="document.getElementById('sheetInput').click()">
-      <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="5.25" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="9.75" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="14.25" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="18.75" cy="6.67" r="1.25" fill="currentColor" stroke="none"/><circle cx="5.25" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="9.75" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="14.25" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="18.75" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="5.25" cy="17.33" r="1.25" fill="currentColor" stroke="none"/><circle cx="9.75" cy="17.33" r="1.25" fill="currentColor" stroke="none"/><circle cx="14.25" cy="17.33" r="1.25" fill="currentColor" stroke="none"/><circle cx="18.75" cy="17.33" r="1.25" fill="currentColor" stroke="none"/></svg>
-      <span data-i18n="sheet_import">Importer un trombinoscope</span>
+      <span data-i18n="sheet_import">Importer une classe via un trombinoscope</span>
     </button>
     <input type="file" id="sheetInput" accept="image/*,application/pdf,.pdf" onchange="onSheetFile(event)" style="display:none">
     <div class="section-lbl hidden" id="countLbl"></div>
     <div class="list" id="cardList"></div>
-    <div class="empty hidden" id="emptyMsg"><span class="empty-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="3.6"/><path d="M5 20c0-3.6 3.1-6.4 7-6.4s7 2.8 7 6.4"/></svg></span><span data-i18n="empty_cards">Ajoute des élèves<br>pour les réviser.</span></div>
     <div class="io-bar hidden" id="ioBar">
       <button class="btn btn-s" onclick="exportFolder()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4"/><path d="M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span data-i18n="export">Exporter</span></button>
       <button class="btn btn-s" onclick="document.getElementById('importInput').click()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span data-i18n="import">Importer</span></button>
@@ -391,7 +388,7 @@ const LANGS={
     first_name:"Prénom", last_name:"NOM (facultatif)", add:"Ajouter",
     crop_photo:"Rogner la photo", crop_apply:"Valider", crop_full:"Photo entière",
     last_name_short:"NOM",
-    sheet_import:"Importer un trombinoscope",
+    sheet_import:"Importer une classe via un trombinoscope",
     sheet_title:"Trombinoscope",
     sheet_hint:"Touche un visage pour y placer le cadre, ajuste-le avec les coins, puis saisis le nom.",
     sheet_add:"Ajouter cet élève",
@@ -400,7 +397,6 @@ const LANGS={
     sheet_page:"Page",
     sheet_added_n:n=>n+" élève"+(n!==1?"s":"")+" ajouté"+(n!==1?"s":""),
     sheet_bad_file:"✗ Fichier illisible (JPG, PNG ou PDF attendu)",
-    empty_cards:"Ajoute des élèves<br>pour les réviser.",
     export:"Exporter", import:"Importer",
     back_cards:"← Classe", pick_count:"Nombre d'élèves à piocher",
     all_class:"Toute la classe", back_return:"← Retour",
@@ -430,7 +426,7 @@ const LANGS={
     first_name:"First name", last_name:"SURNAME (optional)", add:"Add",
     crop_photo:"Crop photo", crop_apply:"Apply", crop_full:"Whole photo",
     last_name_short:"SURNAME",
-    sheet_import:"Import a class photo sheet",
+    sheet_import:"Import a class from a photo sheet",
     sheet_title:"Class photo sheet",
     sheet_hint:"Tap a face to place the frame on it, adjust it with the corners, then type the name.",
     sheet_add:"Add this student",
@@ -439,7 +435,6 @@ const LANGS={
     sheet_page:"Page",
     sheet_added_n:n=>n+" student"+(n!==1?"s":"")+" added",
     sheet_bad_file:"✗ Unreadable file (JPG, PNG or PDF expected)",
-    empty_cards:"Add students<br>to start reviewing.",
     export:"Export", import:"Import",
     back_cards:"← Class", pick_count:"Number of students to pick",
     all_class:"Whole class", back_return:"← Back",
@@ -1226,18 +1221,17 @@ async function saveEditCard(id){
 // ================ Render Deck ================
 function renderDeck(){
   const list=document.getElementById("cardList"),countEl=document.getElementById("countLbl");
-  const emptyEl=document.getElementById("emptyMsg");
   const ioEl=document.getElementById("ioBar");
 
   countEl.textContent=(currentFolder?esc(currentFolder.name)+" — ":"")+t("n_cards")(cards.length);
 
   if(!cards.length){
-    list.innerHTML="";emptyEl.classList.remove("hidden");
+    list.innerHTML="";
     countEl.classList.add("hidden");
     ioEl.classList.add("hidden");
     return;
   }
-  emptyEl.classList.add("hidden");countEl.classList.remove("hidden");
+  countEl.classList.remove("hidden");
   ioEl.classList.remove("hidden");
 
   list.innerHTML=cards.map((c,i)=>{
