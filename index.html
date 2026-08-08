@@ -496,7 +496,6 @@ async function init(){
   document.getElementById("folderInput").addEventListener("input",()=>{
     document.getElementById("addFolderBtn").disabled=!document.getElementById("folderInput").value.trim();
   });
-  tightenSheetOriginals(); // en tâche de fond, volontairement pas attendu
 }
 init();
 
@@ -1118,54 +1117,6 @@ function cropFromSheet(){
     src:drawCrop(img,x,y,w,h,SRC_MAX,.85),
     crop:{x:(sel.x-x)/w,y:(sel.y-y)/h,w:sel.w/w,h:sel.h/h}
   };
-}
-
-// Students imported before the margin was tightened still carry an original 2.5
-// frames wide, so re-cropping them keeps reopening their neighbours. Nothing
-// marks them as coming from a sheet, but the old cropFromSheet() left a margin of
-// exactly 75 % of the frame on every side it did not have to clamp to the edge of
-// the sheet — a hand-made crop landing on that ratio on both axes at once is not
-// a thing. Photos imported one by one therefore stay untouched, which matters:
-// their original is the whole photo and un-cropping must still reach all of it.
-const OLD_SHEET_MARGIN=.75;
-function looksLikeOldSheetCrop(card){
-  if(!card||!card.src||!card.crop) return false;
-  const{x,y,w,h}=card.crop;
-  if(!(w>0&&h>0)||w>=1||h>=1) return false;
-  const axis=(start,size)=>{
-    const full=OLD_SHEET_MARGIN*size,before=start,after=1-start-size;
-    if(before>full+.005||after>full+.005) return false;
-    return Math.abs(before-full)<=.005||Math.abs(after-full)<=.005;
-  };
-  return axis(x,w)&&axis(y,h);
-}
-
-// Redraw such an original around its own frame with the current margin. The
-// rewritten record no longer matches the test above, so the pass is idempotent
-// and needs no flag. `photo` is left alone — it was rendered from the sheet and
-// is still the right image.
-async function tightenSheetOriginal(card){
-  const img=await loadImg(card.src),W=img.naturalWidth,H=img.naturalHeight,c=card.crop;
-  const mx=c.w*SHEET_SRC_MARGIN,my=c.h*SHEET_SRC_MARGIN;
-  const x=Math.max(0,c.x-mx),y=Math.max(0,c.y-my);
-  const w=Math.min(1,c.x+c.w+mx)-x,h=Math.min(1,c.y+c.h+my)-y;
-  card.src=drawCrop(img,x*W,y*H,w*W,h*H,SRC_MAX,.85);
-  card.crop={x:(c.x-x)/w,y:(c.y-y)/h,w:c.w/w,h:c.h/h};
-  await dbPut(S_CARDS,card);
-}
-
-// Run in the background at startup: a class of thirty means thirty decodes, far
-// too slow to make the first screen wait. Nothing displayed depends on it, since
-// `photo` does not change. The open class keeps its own copies of the records, so
-// go through those when they exist — otherwise a re-crop would write the old
-// original back — and re-check the signature on them, in case the student was
-// re-cropped by hand while the pass was running.
-async function tightenSheetOriginals(){
-  for(const rec of await dbAll(S_CARDS)){
-    const card=cards.find(c=>c.id===rec.id)||rec;
-    if(!looksLikeOldSheetCrop(card)) continue;
-    try{await tightenSheetOriginal(card)}catch(e){}
-  }
 }
 
 async function sheetAdd(){
