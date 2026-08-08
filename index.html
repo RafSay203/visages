@@ -1087,13 +1087,29 @@ function updSheetAdd(){
 
 // Keeping the whole sheet once per student would be absurd, and keeping only the
 // frame would make re-cropping pointless — so the stored original is the frame
-// plus a margin of its own size on each side, which is what "dérogner" can take
-// back. The rendered photo is drawn from the sheet itself, not from that copy,
-// to avoid a second JPEG generation.
-const SHEET_SRC_MARGIN=.75;
+// plus a margin, which is what "dérogner" can take back. The margin must stay
+// inside the student's own cell: at 75 % of the frame on each side the stored
+// rectangle was 2.5 frames wide, i.e. most of a row on a three-column sheet, so
+// re-cropping reopened the neighbours' faces. It is now small by default, and
+// once the grid pitch is known it never exceeds the free space around the frame
+// in its cell. The rendered photo is drawn from the sheet itself, not from that
+// copy, to avoid a second JPEG generation.
+const SHEET_SRC_MARGIN=.22;
+// Free space between the frame and the neighbouring cell, halved: that is how far
+// the stored original can grow without catching another face.
+function sheetSrcMargin(){
+  const s=sheet.sel;
+  // Cells scale on both axes, so the horizontal pitch stands in for the vertical
+  // one until a row change has actually been observed — as in advanceSel().
+  const px=sheet.pitchX,py=sheet.pitchY||(px?px*(s.h/s.w):0);
+  return{
+    mx:Math.min(s.w*SHEET_SRC_MARGIN,px?Math.max(0,(px-s.w)/2):Infinity),
+    my:Math.min(s.h*SHEET_SRC_MARGIN,py?Math.max(0,(py-s.h)/2):Infinity)
+  };
+}
 function cropFromSheet(){
   const{sel,img,natW,natH}=sheet;
-  const mx=sel.w*SHEET_SRC_MARGIN,my=sel.h*SHEET_SRC_MARGIN;
+  const{mx,my}=sheetSrcMargin();
   const x=Math.max(0,sel.x-mx),y=Math.max(0,sel.y-my);
   const w=Math.min(natW,sel.x+sel.w+mx)-x,h=Math.min(natH,sel.y+sel.h+my)-y;
   return{
