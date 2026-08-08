@@ -73,13 +73,13 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .add-box{padding:20px;border-radius:var(--r-lg);background:var(--surface);border:1.5px dashed var(--warm-dark);margin-bottom:24px}
 .add-box .lbl{font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
 
-.preview{width:100%;max-height:220px;object-fit:cover;border-radius:var(--r-sm);margin-bottom:12px;display:none}
+.preview{width:min(100%,176px);aspect-ratio:4/5;object-fit:cover;border-radius:var(--r-sm);margin:0 auto 12px;display:none}
 .preview.on{display:block}
 
 /* Card list */
 .list{display:flex;flex-direction:column;gap:8px}
 .item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--warm-dark);animation:fadeUp .3s ease both}
-.thumb{width:48px;height:48px;border-radius:var(--r-sm);object-fit:cover;flex-shrink:0}
+.thumb{width:48px;height:60px;border-radius:var(--r-sm);object-fit:cover;flex-shrink:0}
 .info{flex:1;min-width:0}
 .name{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .surname{font-size:12px;color:var(--text-light);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
@@ -99,8 +99,11 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .qbar{display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);font-weight:600;margin-bottom:14px}
 .track{height:4px;border-radius:3px;background:var(--warm-dark);margin-bottom:22px;overflow:hidden}
 .fill{height:100%;background:var(--accent);border-radius:3px;transition:width .5s ease}
-.q-photo-wrap{border-radius:var(--r-lg);overflow:hidden;border:1.5px solid var(--warm-dark);margin-bottom:18px;background:var(--surface);position:relative;cursor:pointer;-webkit-user-select:none;user-select:none}
-.q-photo{width:100%;max-height:340px;object-fit:cover;display:block}
+/* The frame is 4:5, like every student photo in the app. Bounding the width by
+   44vh bounds the height by 55vh, so the judge buttons stay above the fold on a
+   short screen without the ratio ever being sacrificed. */
+.q-photo-wrap{width:min(100%,44vh);aspect-ratio:4/5;border-radius:var(--r-lg);overflow:hidden;border:1.5px solid var(--warm-dark);margin:0 auto 18px;background:var(--surface);position:relative;cursor:pointer;-webkit-user-select:none;user-select:none}
+.q-photo{width:100%;height:100%;object-fit:cover;display:block}
 .tap-hint{position:absolute;bottom:0;left:0;right:0;padding:12px;text-align:center;font-size:13px;font-weight:600;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.45));pointer-events:none;transition:opacity .3s}
 .tap-hint.hide{opacity:0}
 .tap-prompt{font-size:15px;color:var(--text-light);font-weight:600;margin-bottom:4px}
@@ -157,7 +160,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
   .judge-yes,.judge-no{padding:14px 8px;font-size:14px}
   .item,.folder-item{gap:8px}
   .item{padding:10px 10px}
-  .thumb{width:44px;height:44px}
+  .thumb{width:44px;height:55px}
   .item .grip,.folder-item .grip{width:24px}
   .actions .btn-icon,.actions .btn-d,.folder-actions .btn-icon,.folder-actions .btn-d{padding:4px 4px}
   .actions,.folder-actions{gap:3px}
@@ -166,7 +169,9 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 /* Crop tool */
 .crop-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.68);z-index:150;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease;touch-action:none;overscroll-behavior:contain}
 .crop-box{background:var(--surface);border-radius:var(--r-lg);padding:20px;max-width:400px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-.crop-stage{position:relative;margin:0 auto;background:#111;border-radius:var(--r-sm);overflow:hidden;touch-action:none}
+/* Black, not near-black: what shows around a photo that is not 4:5 is exactly
+   what the rendered photo will carry. */
+.crop-stage{position:relative;margin:0 auto;background:#000;border-radius:var(--r-sm);overflow:hidden;touch-action:none}
 .crop-stage img{display:block;pointer-events:none;user-select:none;-webkit-user-select:none}
 .crop-sel{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55);cursor:move;touch-action:none}
 /* Corner brackets sit INSIDE the frame, so they are never clipped by the edge of
@@ -225,7 +230,7 @@ header h1{font-family:var(--font-d);font-size:26px;font-weight:600;color:var(--a
 .sheet-added-lbl{font-size:12px;color:var(--text-light);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin:20px 0 10px}
 .sheet-added{display:flex;flex-wrap:wrap;gap:7px}
 .sheet-added figure{width:52px}
-.sheet-added img{width:52px;height:52px;object-fit:cover;border-radius:var(--r-sm);border:1.5px solid var(--warm-dark);display:block}
+.sheet-added img{width:52px;height:65px;object-fit:cover;border-radius:var(--r-sm);border:1.5px solid var(--warm-dark);display:block}
 .sheet-added figcaption{font-size:10px;color:var(--text-light);margin-top:3px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sheet-loading{display:flex;align-items:center;justify-content:center;height:44vh;min-height:210px;color:var(--text-light);font-size:14px;font-weight:600}
 </style>
@@ -661,7 +666,12 @@ function drawCrop(img,sx,sy,sw,sh,max,q){
   if(w>max||h>max){if(w>h){h=h*max/w;w=max}else{w=w*max/h;h=max}}
   const c=document.createElement("canvas");
   c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));
-  c.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
+  const ctx=c.getContext("2d");
+  // A 4:5 frame on a photo that is not 4:5 reaches past the image. drawImage
+  // clips the part that exists and leaves the rest of the canvas alone, so the
+  // black bands the crop tool displayed have to be painted here.
+  ctx.fillStyle="#000";ctx.fillRect(0,0,c.width,c.height);
+  ctx.drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
   return c.toDataURL("image/jpeg",q||.82);
 }
 function cropRect(img,crop){
@@ -721,25 +731,53 @@ async function cropCard(id){
 
 // ================ Crop tool ================
 let cropState=null;
-// The whole original is shown, with the current crop as the starting frame — so
-// dragging a handle outwards takes back a part of the photo that was cropped out.
+// Every student photo is displayed in a 4:5 portrait box, so the frame is locked
+// to that ratio. A photo that is not 4:5 would otherwise be impossible to frame
+// whole, so it is laid on a 4:5 black stage: the frame can then take in the
+// entire image, bands included, and what those bands cover is what the rendered
+// photo will carry. The stage is shown in full with the current crop as the
+// starting frame, so dragging a handle outwards takes back a part that was cut.
+const CROP_RATIO=4/5;   // width / height
+const CROP_MIN_W=72;    // narrowest frame, in display pixels
+
+// The smallest 4:5 box holding the whole image, and where the image sits in it.
+function padTo45(w,h){
+  const sw=Math.max(w,h*CROP_RATIO),sh=Math.max(h,w/CROP_RATIO);
+  return{sw,sh,offX:(sw-w)/2,offY:(sh-h)/2};
+}
+// A crop stored before the ratio was imposed can be any shape: grow it to 4:5
+// rather than cut into it, so nothing already framed is lost, then bring it back
+// inside the stage.
+function fitCropRatio(s){
+  const st=cropState;
+  let w=Math.max(s.w,s.h*CROP_RATIO),h=w/CROP_RATIO;
+  const k=Math.min(1,st.stageW/w,st.stageH/h);
+  w*=k;h*=k;
+  const cx=s.x+s.w/2,cy=s.y+s.h/2;
+  return{x:Math.min(Math.max(0,cx-w/2),st.stageW-w),y:Math.min(Math.max(0,cy-h/2),st.stageH-h),w,h};
+}
 function openCropper(dataUrl,crop,onDone){
   const img=new Image();
   img.onload=()=>{
+    const pad=padTo45(img.naturalWidth,img.naturalHeight);
     const maxW=Math.min(360,window.innerWidth-64);
     const maxH=Math.min(420,window.innerHeight-220);
-    const fit=Math.min(maxW/img.naturalWidth,maxH/img.naturalHeight,1);
-    const dispW=Math.round(img.naturalWidth*fit),dispH=Math.round(img.naturalHeight*fit);
-    const c=crop||{x:0,y:0,w:1,h:1};
-    cropState={src:dataUrl,natW:img.naturalWidth,natH:img.naturalHeight,dispW,dispH,onDone,
-      sel:{x:c.x*dispW,y:c.y*dispH,w:c.w*dispW,h:c.h*dispH},drag:null};
+    const fit=Math.min(maxW/pad.sw,maxH/pad.sh,1);
+    cropState={src:dataUrl,onDone,drag:null,sel:null,
+      stageW:Math.round(pad.sw*fit),stageH:Math.round(pad.sh*fit),
+      imgW:Math.round(img.naturalWidth*fit),imgH:Math.round(img.naturalHeight*fit),
+      offX:Math.round(pad.offX*fit),offY:Math.round(pad.offY*fit)};
+    const s=cropState;
+    cropState.sel=crop
+      ?fitCropRatio({x:s.offX+crop.x*s.imgW,y:s.offY+crop.y*s.imgH,w:crop.w*s.imgW,h:crop.h*s.imgH})
+      :{x:0,y:0,w:s.stageW,h:s.stageH};
     renderCropper();
   };
   img.src=dataUrl;
 }
 function resetCrop(){
   if(!cropState) return;
-  cropState.sel={x:0,y:0,w:cropState.dispW,h:cropState.dispH};
+  cropState.sel={x:0,y:0,w:cropState.stageW,h:cropState.stageH};
   layoutCropSel();
 }
 function renderCropper(){
@@ -747,8 +785,8 @@ function renderCropper(){
   const o=document.getElementById("cropOverlay");
   o.className="crop-overlay";
   o.innerHTML=`<div class="crop-box">
-    <div class="crop-stage" id="cropStage" style="width:${cropState.dispW}px;height:${cropState.dispH}px">
-      <img src="${cropState.src}" width="${cropState.dispW}" height="${cropState.dispH}" alt="">
+    <div class="crop-stage" id="cropStage" style="width:${cropState.stageW}px;height:${cropState.stageH}px">
+      <img src="${cropState.src}" style="position:absolute;left:${cropState.offX}px;top:${cropState.offY}px;width:${cropState.imgW}px;height:${cropState.imgH}px" alt="">
       <div class="crop-sel" id="cropSel">
         <div class="crop-handle" data-h="nw"></div>
         <div class="crop-handle" data-h="ne"></div>
@@ -775,26 +813,35 @@ function layoutCropSel(){
   const s=cropState.sel;
   sel.style.left=s.x+"px";sel.style.top=s.y+"px";sel.style.width=s.w+"px";sel.style.height=s.h+"px";
 }
+// Resize a frame by one of its corners without leaving the 4:5 ratio: the
+// opposite corner stays put, the size follows whichever axis the pointer pushed
+// furthest, and the result is held inside the box the frame lives in. Shared by
+// the crop tool and the trombinoscope frame, which only differ by that box.
+function resizeKeepRatio(mode,st,dx,dy,boxW,boxH,minW){
+  const west=mode.includes("w"),north=mode.includes("n");
+  const ax=west?st.x+st.w:st.x, ay=north?st.y+st.h:st.y;   // the anchored corner
+  let w=Math.abs((west?st.x+dx:st.x+st.w+dx)-ax);
+  const h=Math.abs((north?st.y+dy:st.y+st.h+dy)-ay);
+  if(h*CROP_RATIO>w) w=h*CROP_RATIO;
+  const room=Math.min(west?ax:boxW-ax,(north?ay:boxH-ay)*CROP_RATIO);
+  w=Math.max(Math.min(w,room),Math.min(minW,room));
+  const nh=w/CROP_RATIO;
+  return{x:west?ax-w:ax,y:north?ay-nh:ay,w,h:nh};
+}
 function startCropDrag(e,mode){
   e.preventDefault();
   const startX=e.clientX,startY=e.clientY;
   const startSel={...cropState.sel};
-  const MIN=72,W=cropState.dispW,H=cropState.dispH;
+  const W=cropState.stageW,H=cropState.stageH;
   function onMove(ev){
     const dx=ev.clientX-startX,dy=ev.clientY-startY;
-    let {x,y,w,h}=startSel;
     if(mode==="move"){
-      x=Math.min(Math.max(0,startSel.x+dx),W-w);
-      y=Math.min(Math.max(0,startSel.y+dy),H-h);
+      cropState.sel={...startSel,
+        x:Math.min(Math.max(0,startSel.x+dx),W-startSel.w),
+        y:Math.min(Math.max(0,startSel.y+dy),H-startSel.h)};
     }else{
-      let x2=startSel.x+startSel.w,y2=startSel.y+startSel.h;
-      if(mode.includes("w")){x=Math.min(Math.max(0,startSel.x+dx),x2-MIN);}
-      if(mode.includes("e")){x2=Math.max(Math.min(W,x2+dx),startSel.x+MIN);}
-      if(mode.includes("n")){y=Math.min(Math.max(0,startSel.y+dy),y2-MIN);}
-      if(mode.includes("s")){y2=Math.max(Math.min(H,y2+dy),startSel.y+MIN);}
-      w=x2-x;h=y2-y;
+      cropState.sel=resizeKeepRatio(mode,startSel,dx,dy,W,H,CROP_MIN_W);
     }
-    cropState.sel={x,y,w,h};
     layoutCropSel();
   }
   function onUp(){
@@ -811,9 +858,11 @@ function closeCropper(){
 }
 function confirmCrop(){
   if(!cropState) return;
-  const{sel,dispW,dispH,onDone}=cropState;
-  const cl=(v)=>Math.min(1,Math.max(0,v));
-  const crop={x:cl(sel.x/dispW),y:cl(sel.y/dispH),w:cl(sel.w/dispW),h:cl(sel.h/dispH)};
+  const{sel,imgW,imgH,offX,offY,onDone}=cropState;
+  // Measured against the image, not against the padded stage: a frame reaching
+  // into the black bands lands outside 0..1, which is exactly what drawCrop
+  // paints black.
+  const crop={x:(sel.x-offX)/imgW,y:(sel.y-offY)/imgH,w:sel.w/imgW,h:sel.h/imgH};
   closeCropper();
   onDone(crop);
 }
@@ -913,10 +962,12 @@ async function openSheet(src,meta){
     added:keep?keep.added:[],
     lastAdd:null,pitchX:0,pitchY:0,rowX0:0
   };
-  // Start near the top-left, where the first portrait of a sheet almost always sits.
+  // Start near the top-left, where the first portrait of a sheet almost always
+  // sits. The frame is 4:5 like every student photo in the app, so what gets
+  // framed on the sheet is exactly what will be displayed.
   const side=Math.round(Math.min(sheet.natW,sheet.natH)/6);
-  const s=Math.max(40,Math.min(side,sheet.natW,sheet.natH));
-  sheet.sel={x:0,y:0,w:s,h:s};
+  const s=Math.max(50,Math.min(side,sheet.natH,sheet.natW/CROP_RATIO));
+  sheet.sel={x:0,y:0,w:s*CROP_RATIO,h:s};
   placeSel(Math.round(sheet.natW*0.06),Math.round(sheet.natH*0.12));
   renderSheet();
 }
@@ -1055,19 +1106,13 @@ function startSheetDrag(e,mode){
   const MIN=Math.round(72/z),W=sheet.natW,H=sheet.natH;
   function onMove(ev){
     const dx=(ev.clientX-x0)/z,dy=(ev.clientY-y0)/z;
-    let{x,y,w,h}=st;
     if(mode==="move"){
-      x=Math.min(Math.max(0,st.x+dx),W-w);
-      y=Math.min(Math.max(0,st.y+dy),H-h);
+      sheet.sel={...st,
+        x:Math.min(Math.max(0,st.x+dx),W-st.w),
+        y:Math.min(Math.max(0,st.y+dy),H-st.h)};
     }else{
-      let x2=st.x+st.w,y2=st.y+st.h;
-      if(mode.includes("w")){x=Math.min(Math.max(0,st.x+dx),x2-MIN);}
-      if(mode.includes("e")){x2=Math.max(Math.min(W,x2+dx),st.x+MIN);}
-      if(mode.includes("n")){y=Math.min(Math.max(0,st.y+dy),y2-MIN);}
-      if(mode.includes("s")){y2=Math.max(Math.min(H,y2+dy),st.y+MIN);}
-      w=x2-x;h=y2-y;
+      sheet.sel=resizeKeepRatio(mode,st,dx,dy,W,H,MIN);
     }
-    sheet.sel={x,y,w,h};
     layoutSel();
   }
   function onUp(){
